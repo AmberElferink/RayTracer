@@ -5,7 +5,6 @@ namespace Template {
 
 class Game
 {
-        //hoi
 	// member variables
 	public Surface screen;
 	// initialize
