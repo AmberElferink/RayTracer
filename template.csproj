@@ -71,7 +71,7 @@
     <Compile Include="Classes\Primitive.cs" />
     <Compile Include="Classes\Ray.cs" />
     <Compile Include="Classes\Scene.cs" />
-    <Compile Include="game.cs" />
+    <Compile Include="Raytracer.cs" />
     <Compile Include="surface.cs" />
     <Compile Include="template.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

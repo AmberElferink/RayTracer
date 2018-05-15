@@ -3,13 +3,15 @@ using System.IO;
 
 namespace Template {
 
-class Game
+class RayTracer
 {
 	// member variables
 	public Surface screen;
+    public Camera camera;
 	// initialize
 	public void Init()
 	{
+        camera = new Camera();
 	}
 	// tick: renders one frame
 	public void Tick()
