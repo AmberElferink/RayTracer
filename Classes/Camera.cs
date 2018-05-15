@@ -8,7 +8,6 @@ using OpenTK.Graphics.OpenGL;
 
 class Camera
 {
-    // member variables
     public Vector3 E; // camera position
     public Vector3 V; // view direction; must be normalized
     //public double a; // field of view-angle in degrees // convert fov to radians: multiply by Math.PI/180

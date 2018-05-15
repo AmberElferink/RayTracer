@@ -8,7 +8,10 @@ using OpenTK.Graphics.OpenGL;
 
 class Primitive
 {
-    virtual void Intersect(Ray ray);
+    Vector3 color = new Vector3(100, 40, 50);
+
+    public virtual void Intersect(Ray ray)
+    { }
 }
 
 class Plane : Primitive
@@ -22,9 +25,9 @@ class Plane : Primitive
         this.d = d;
     }
 
-    override void Intersect(Ray ray)
+    public override void Intersect(Ray ray)
     {
-        float t = -(dot(ray.O, this.N) + d) / (dot(ray.D, this.N));
+        float t = -(Vector3.Dot(ray.O, this.N) + d) / (Vector3.Dot(ray.D, this.N));
         if ((t < ray.t) && (t > 0)) ray.t = t;
     }
 }
@@ -32,7 +35,7 @@ class Plane : Primitive
 class Sphere : Primitive
 {
     public Vector3 pos; // center of sphere
-    public float r; // radius of sphere
+    public double r; // radius of sphere
     public float r2; // radius squared
 
     public Sphere(Vector3 pos, float r)
@@ -42,14 +45,14 @@ class Sphere : Primitive
         this.r2 = r * r;
     }
 
-    override void Intersect(Ray ray)
+    public override void Intersect(Ray ray)
     {
         Vector3 c = this.pos - ray.O;
-        float t = dot(c, ray.D);
+        float t = Vector3.Dot(c, ray.D);
         Vector3 q = c - t * ray.D;
-        float p2 = dot(q, q);
+        float p2 = Vector3.Dot(q, q);
         if (p2 > this.r2) return;
-        t = -Math.Sqrt(this.r2 - p2);
+        t = (float)(-Math.Sqrt(this.r2 - p2));
         if ((t < ray.t) && (t > 0)) ray.t = t;
     }
 }
