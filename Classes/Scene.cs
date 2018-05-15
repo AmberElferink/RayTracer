@@ -13,7 +13,7 @@ public class Scene
 	}
 
     ///<summary>
-    ///Method that returns closest distance to a intersection with a primitive.
+    ///Method that returns closest distance to an intersection with a primitive.
     ///</summary>
     /// <param name="ray">a ray that gets shot and maybe intersects a primitive</param>
     /// <returns></returns>
