@@ -11,8 +11,6 @@ public class Camera
     public Vector3 E; // camera position
     public Vector3 V; // view direction; must be normalized
     public double a; // field of view-angle in degrees
-    public float w; // width of screen
-    public float h; // height of screen
     public Vector3 C; // center of screen 
     public Vector3 p0; // upper left corner of screen
     public Vector3 p1; // upper right corner of screen
@@ -23,8 +21,8 @@ public class Camera
         this.E = E;
         this.V = Vector3.Normalize(T - E); // T = target
         this.a = a * Math.PI / 180; // in radians
-        this.w = (float)(2 * Math.Tan(this.a / 2));
-        this.h = this.w;
+        float w = (float)(2 * Math.Tan(this.a / 2)); // width of screen
+        float h = w; // height of screen
         this.C = E + V;
         Vector3 y = new Vector3(0, 1, 0);
         Vector3 right = Vector3.Normalize(Vector3.Cross(this.V, y));
