@@ -10,6 +10,11 @@ class Primitive
 {
     Vector3 color = new Vector3(100, 40, 50);
 
+    ///<summary>
+    ///Method that calculates distance from ray to primitive, and updates ray.t if this distance is shorter than the actual value of ray.t.
+    ///</summary>
+    /// <param name="ray">a ray that gets shot and maybe intersects a primitive</param>
+    /// <returns></returns>
     public virtual void Intersect(Ray ray)
     { }
 }
