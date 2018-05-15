@@ -16,6 +16,7 @@ class Camera
     public Vector3 p0; // screen corners
     public Vector3 p1;
     public Vector3 p2;
+    public Vector2 viewangle; 
     // later: make screen corners 
 
     public Camera()
@@ -26,6 +27,17 @@ class Camera
         this.p0 = C + new Vector3(-1, -1, 0);
         this.p1 = C + new Vector3(1, -1, 0);
         this.p2 = C + new Vector3(-1, 1, 0);
+        viewangle = new Vector2((float)-(Math.PI / 4f), (float)(Math.PI / 4));
+    }
+
+    public Vector2 Viewangle
+    {
+        get { return viewangle; }
+    }
+
+    public Vector3 Viewdirection
+    {
+        get { return V; }
     }
 
     /* EXPERIMENT met variabele dingen
