@@ -17,7 +17,7 @@ public class Camera
     public Vector3 p0; // upper left corner of screen
     public Vector3 p1; // upper right corner of screen
     public Vector3 p2; // bottom left corner of screen
-    public Vector2 viewangle;
+
 
     public Camera(Vector3 E, Vector3 T, double a)
     {
@@ -39,18 +39,12 @@ public class Camera
         this.C = E + 1 * V; // later: maak van 1 d, berekenen mbv field of view-angle
         this.p0 = C + new Vector3(-1, -1, 0);
         this.p1 = C + new Vector3(1, -1, 0);
-        this.p2 = C + new Vector3(-1, 1, 0); */
-        this.p2 = C + new Vector3(-1, 1, 0);
-        viewangle = new Vector2((float)-(Math.PI / 4f), (float)(Math.PI / 4));
+        this.p2 = C + new Vector3(-1, 1, 0); 
+        this.p2 = C + new Vector3(-1, 1, 0);*/
     }
 
-    public Vector2 Viewangle
+    public double Viewangle
     {
-        get { return viewangle; }
-    }
-
-    public Vector3 Viewdirection
-    {
-        get { return V; }
+        get { return a; }
     }
 }

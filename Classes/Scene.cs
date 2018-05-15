@@ -9,8 +9,9 @@ public class Scene
     
 	public Scene()
 	{
-        
-	}
+        Primitives.Add(new Sphere(new Vector3(3, 0, 5), 2));
+        //Sphere sphere2 = new Sphere(new Vector3(2, 0, 5), 3);
+    }
 
     ///<summary>
     ///Method that returns closest distance to an intersection with a primitive.
@@ -20,13 +21,11 @@ public class Scene
     public Intersection Intersect(Ray ray)
     {
         Intersection intersect = null;
-        foreach (Light light in Lights)
+        foreach(Primitive primitive in Primitives)
         {
-            foreach(Primitive primitive in Primitives)
-            {
-                Intersection temp = primitive.Intersect(ray);
-                if (temp != null) intersect = temp;
-            }
+            Intersection temp = primitive.Intersect(ray);
+            if (temp != null)
+                intersect = temp;
         }
         return intersect;
     }
