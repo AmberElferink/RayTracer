@@ -20,11 +20,11 @@ class Camera
 
     public Camera()
     {
-        this.E = (0, 0, -10);
-        this.V = (0, 0, 1);
+        this.E = new Vector3(0, -10, 0);
+        this.V = new Vector3(0, 0, 1);
         this.C = E + 1 * V; // later: maak van 1 d, berekenen mbv field of view-angle
-        this.p0 = C + (-1, -1, 0);
-        this.p1 = C + (1, -1, 0);
-        this.p2 = C + (-1, 1, 0);
+        this.p0 = C + new Vector3(-1, -1, 0);
+        this.p1 = C + new Vector3(1, -1, 0);
+        this.p2 = C + new Vector3(-1, 1, 0);
     }
 }
