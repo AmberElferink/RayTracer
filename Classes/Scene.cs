@@ -17,17 +17,18 @@ public class Scene
     ///</summary>
     /// <param name="ray">a ray that gets shot and maybe intersects a primitive</param>
     /// <returns></returns>
-    public float Intersect(Ray ray)
+    public Intersection Intersect(Ray ray)
     {
-        foreach(Light light in Lights)
+        Intersection intersect = null;
+        foreach (Light light in Lights)
         {
             foreach(Primitive primitive in Primitives)
             {
-                primitive.Intersect(ray);
-
+                Intersection temp = primitive.Intersect(ray);
+                if (temp != null) intersect = temp;
             }
         }
-        return ray.t;
+        return intersect;
     }
     
 }

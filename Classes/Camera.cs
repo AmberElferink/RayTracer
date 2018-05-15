@@ -6,26 +6,40 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
-class Camera
+public class Camera
 {
     public Vector3 E; // camera position
     public Vector3 V; // view direction; must be normalized
-    //public double a; // field of view-angle in degrees; convert fov to radians: multiply by Math.PI/180
-    //public float d;
-    public Vector3 C; // center of the screen 
-    public Vector3 p0; // screen corners
-    public Vector3 p1;
-    public Vector3 p2;
-    public Vector2 viewangle; 
-    // later: make screen corners 
+    public double a; // field of view-angle in degrees
+    public float w; // width of screen
+    public float h; // height of screen
+    public Vector3 C; // center of screen 
+    public Vector3 p0; // upper left corner of screen
+    public Vector3 p1; // upper right corner of screen
+    public Vector3 p2; // bottom left corner of screen
+    public Vector2 viewangle;
 
-    public Camera()
+    public Camera(Vector3 E, Vector3 T, double a)
     {
-        this.E = new Vector3(0, -9, 0);
+        this.E = E;
+        this.V = Vector3.Normalize(T - E); // T = target
+        this.a = a * Math.PI / 180; // in radians
+        this.w = (float)(2 * Math.Tan(this.a / 2));
+        this.h = this.w;
+        this.C = E + V;
+        Vector3 y = new Vector3(0, 1, 0);
+        Vector3 right = Vector3.Normalize(Vector3.Cross(this.V, y));
+        Vector3 up = Vector3.Cross(right, this.V); // already normalized
+        this.p0 = this.C - (w / 2) * right + (h / 2) * up;
+        this.p1 = this.p0 + w * right;
+        this.p2 = this.p0 - h * up;
+
+        /* this.E = new Vector3(0, 0, 0);
         this.V = new Vector3(0, 0, 1);
         this.C = E + 1 * V; // later: maak van 1 d, berekenen mbv field of view-angle
         this.p0 = C + new Vector3(-1, -1, 0);
         this.p1 = C + new Vector3(1, -1, 0);
+        this.p2 = C + new Vector3(-1, 1, 0); */
         this.p2 = C + new Vector3(-1, 1, 0);
         viewangle = new Vector2((float)-(Math.PI / 4f), (float)(Math.PI / 4));
     }
@@ -39,18 +53,4 @@ class Camera
     {
         get { return V; }
     }
-
-    /* EXPERIMENT met variabele dingen
-     * 
-     * public Camera(Vector3 E, Vector3 V, double a)
-     * {
-     *      this.E = E;
-     *      this.V = V;
-     *      this.a = a*Math.PI/180; // in radians
-     *      this.d = 1/Math.Tan(a/2);
-     *      this.C = E + d*V;
-     *      
-     * }
-     * 
-     */
 }

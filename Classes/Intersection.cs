@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
 
-class Intersection
+public class Intersection
 {
     public float t; // shortest intersection distance
     public Vector3 norm; // normal at intersection point
