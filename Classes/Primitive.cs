@@ -6,17 +6,16 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
-class Primitive
+abstract class Primitive
 {
-    Vector3 color = new Vector3(100, 40, 50);
+    Vector3 color = new Vector3(100, 40, 50); // later: in material implementatie
 
     ///<summary>
     ///Method that calculates distance from ray to primitive, and updates ray.t if this distance is shorter than the actual value of ray.t.
     ///</summary>
     /// <param name="ray">a ray that gets shot and maybe intersects a primitive</param>
     /// <returns></returns>
-    public virtual void Intersect(Ray ray)
-    { }
+    public abstract Intersection Intersect(Ray ray);
 }
 
 class Plane : Primitive
@@ -30,34 +29,45 @@ class Plane : Primitive
         this.d = d;
     }
 
-    public override void Intersect(Ray ray)
+    public override Intersection Intersect(Ray ray)
     {
         float t = -(Vector3.Dot(ray.O, this.N) + d) / (Vector3.Dot(ray.D, this.N));
-        if ((t < ray.t) && (t > 0)) ray.t = t;
+        if ((t < ray.t) && (t > 0))
+        {
+            ray.t = t;
+            return new Intersection(t, N, this);
+        }
+        else return null;
     }
 }
 
 class Sphere : Primitive
 {
-    public Vector3 pos; // center of sphere
-    public double r; // radius of sphere
+    public Vector3 center; // center of sphere
+    public float r; // radius of sphere
     public float r2; // radius squared
 
-    public Sphere(Vector3 pos, float r)
+    public Sphere(Vector3 center, float r)
     {
-        this.pos = pos;
+        this.center = center;
         this.r = r;
         this.r2 = r * r;
     }
 
-    public override void Intersect(Ray ray)
+    public override Intersection Intersect(Ray ray)
     {
-        Vector3 c = this.pos - ray.O;
+        Vector3 c = this.center - ray.O;
         float t = Vector3.Dot(c, ray.D);
         Vector3 q = c - t * ray.D;
         float p2 = Vector3.Dot(q, q);
-        if (p2 > this.r2) return;
+        if (p2 > this.r2) return null;
         t = (float)(-Math.Sqrt(this.r2 - p2));
-        if ((t < ray.t) && (t > 0)) ray.t = t;
+        if ((t < ray.t) && (t > 0))
+        {
+            ray.t = t;
+            Vector3 P = ray.O + t * ray.D; // intersection point of ray with sphere
+            return new Intersection(t, (P - this.center) / this.r, this);
+        }
+        else return null;
     }
 }

@@ -34,7 +34,7 @@ class Camera
      * {
      *      this.E = E;
      *      this.V = V;
-     *      this.a = a;
+     *      this.a = a*Math.PI/180; // in radians
      *      this.d = 1/Math.Tan(a/2);
      *      this.C = E + d*V;
      *      

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK;
 
-public struct Ray
+public class Ray
 {
     public Vector3 O; // ray origin
     public Vector3 D; // ray direction
