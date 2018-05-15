@@ -20,7 +20,7 @@ public class Camera
     {
         this.E = E;
         this.V = Vector3.Normalize(T - E); // T = target
-        this.a = a * Math.PI / 180; // in radians
+        this.a = a * Math.PI / 180; // input a must be in degrees; it is then converted to radians
         float w = (float)(2 * Math.Tan(this.a / 2)); // width of screen
         float h = w; // height of screen
         this.C = E + V;
