@@ -6,7 +6,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
-class Camera
+public class Camera
 {
     public Vector3 E; // camera position
     public Vector3 V; // view direction; must be normalized
@@ -20,7 +20,7 @@ class Camera
 
     public Camera()
     {
-        this.E = new Vector3(0, -9, 0);
+        this.E = new Vector3(0, 0, 0);
         this.V = new Vector3(0, 0, 1);
         this.C = E + 1 * V; // later: maak van 1 d, berekenen mbv field of view-angle
         this.p0 = C + new Vector3(-1, -1, 0);

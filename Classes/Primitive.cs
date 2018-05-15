@@ -6,7 +6,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
-abstract class Primitive
+public abstract class Primitive
 {
     Vector3 color = new Vector3(100, 40, 50); // later: in material implementatie
 
@@ -18,7 +18,7 @@ abstract class Primitive
     public abstract Intersection Intersect(Ray ray);
 }
 
-class Plane : Primitive
+public class Plane : Primitive
 {
     public Vector3 N; // normal of plane
     public float d; // equation p.N + d = 0 for a point p on the plane
@@ -41,7 +41,7 @@ class Plane : Primitive
     }
 }
 
-class Sphere : Primitive
+public class Sphere : Primitive
 {
     public Vector3 center; // center of sphere
     public float r; // radius of sphere
