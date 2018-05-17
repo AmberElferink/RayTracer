@@ -1,33 +1,28 @@
-﻿using System;
-using System.IO;
-using OpenTK;
+﻿using OpenTK;
+using System;
 
-namespace Template {
+namespace Template
+{
 
-    class RayTracer
+    public class Raytracer
     {
-	    // member variables
-	    public Surface screen;
+        // member variables
+        Surface screen;
         public Camera camera;
         public Scene scene;
-	    // initialize
-	    public void Init()
-	    {
-            camera = new Camera(new Vector3(0,0,0), new Vector3(0,0,1), 45);
-            scene = new Scene();
-	    }
-	    // tick: renders one frame
-	    public void Tick()
-	    {
-            Render();
-	    }
 
+        public Raytracer(Surface screenApp)
+        {
+            screen = screenApp;
+            camera = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 1), 90);
+            scene = new Scene();
+        }
         public void Render()
         {
 
             for (int y = 0; y < screen.height; y++)
             {
-                
+
                 for (int x = 0; x < screen.width; x++)
                 {
                     Vector3 D = (float)x / (float)screen.width * (camera.p1 - camera.p0) + (float)y / (float)screen.height * (camera.p2 - camera.p0) + camera.p0 - camera.E;
@@ -36,7 +31,7 @@ namespace Template {
                     Ray ray = new Ray(camera.E, D, 1E30f);
                     Intersection intersection = scene.Intersect(ray);
 
-                    if(intersection != null)
+                    if (intersection != null)
                         screen.pixels[x + y * screen.width] = CreateColor(intersection.prim.color);
                 }
             }
@@ -49,6 +44,7 @@ namespace Template {
             int b = (int)color.Z;
             return (r << 16) + (g << 8) + b;
         }
-    } // class raytracer
 
-} // namespace Template
+
+    } //class raytracer
+} //namespace template
