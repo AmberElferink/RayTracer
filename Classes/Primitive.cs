@@ -35,7 +35,7 @@ public class Plane : Primitive
         if ((t < ray.t) && (t > 0))
         {
             ray.t = t;
-            return new Intersection(t, N, this);
+            return new Intersection(t, ray.O + t * ray.D, N, this);
         }
         else return null;
     }
@@ -66,7 +66,7 @@ public class Sphere : Primitive
         {
             ray.t = t;
             Vector3 P = ray.O + t * ray.D; // intersection point of ray with sphere
-            return new Intersection(t, (P - this.center) / this.r, this);
+            return new Intersection(t, P, (P - this.center) / this.r, this);
         }
         else return null;
     }
