@@ -10,8 +10,8 @@ public class Scene
 
     public Scene()
 	{
-        Primitives.Add(new Sphere(new Vector3(3, 0, 5), 2, new Vector3(1, 0.1f, 0.1f)));
-        Primitives.Add(new Sphere(new Vector3(2, 0, 6), 3, new Vector3(0.1f, 1, 0.1f)));
+        Primitives.Add(new Sphere(new Vector3(-2, 4, 4), 2, new Vector3(1, 0.1f, 0.1f)));
+        Primitives.Add(new Sphere(new Vector3(3, 0, 10), 2, new Vector3(0.1f, 1, 0.1f)));
         Lights.Add(new Light(new Vector3(1, 0, -1), new Vector3(25, 25, 25)));
         //Sphere sphere2 = new Sphere(new Vector3(2, 0, 5), 3);
     }

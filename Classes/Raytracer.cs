@@ -21,7 +21,7 @@ namespace Template
         {
 
             for (int y = 0; y < screen.height; y++)
-            {
+            { 
                 for (int x = 0; x < screen.width; x++)
                 {
                     Vector3 D = (float)x / (float)screen.width * (camera.p1 - camera.p0) + (float)y / (float)screen.height * (camera.p2 - camera.p0) + camera.p0 - camera.E;
