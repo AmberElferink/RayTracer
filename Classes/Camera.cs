@@ -31,14 +31,6 @@ public class Camera
         p0 = C - (w / 2) * right + (h / 2) * up;
         p1 = p0 + w * right;
         p2 = p0 - h * up;
-
-        /* this.E = new Vector3(0, 0, 0);
-        this.V = new Vector3(0, 0, 1);
-        this.C = E + 1 * V; // later: maak van 1 d, berekenen mbv field of view-angle
-        this.p0 = C + new Vector3(-1, -1, 0);
-        this.p1 = C + new Vector3(1, -1, 0);
-        this.p2 = C + new Vector3(-1, 1, 0); 
-        this.p2 = C + new Vector3(-1, 1, 0);*/
     }
 
     public double Viewangle

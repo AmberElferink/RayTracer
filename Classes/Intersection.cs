@@ -7,7 +7,7 @@ using OpenTK;
 
 public class Intersection
 {
-    public float t; // shortest intersection distance
+    public float t; // intersection distance
     public Vector3 point; // intersection point
     public Vector3 norm; // normal at intersection point
     public Primitive prim; // nearest primitive

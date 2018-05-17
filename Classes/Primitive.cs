@@ -39,6 +39,7 @@ public class Plane : Primitive
             return new Intersection(t, ray.O + t * ray.D, this.N, this);
         }
         else return null;
+        // TODO: checken of er een probleem is als de ray parallel is aan het vlak
     }
 }
 
