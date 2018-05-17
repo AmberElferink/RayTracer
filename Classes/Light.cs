@@ -1,5 +1,4 @@
-﻿
-using OpenTK;
+﻿using OpenTK;
 
 public class Light
 {
@@ -12,13 +11,5 @@ public class Light
         color = col;
         //= new Vector3(0, -15, 5); //5 behind and 5 above the camera
         // = new Vector3(255, 255, 255);
-    }
-
-    public Color(Intersection intersection)
-    {
-        Vector3 L = this.position - intersection.point;
-        float dist = L.Length;
-        L *= (1.0f / dist);
-        
     }
 }
