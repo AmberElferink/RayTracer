@@ -8,7 +8,7 @@ using OpenTK.Graphics.OpenGL;
 
 public abstract class Primitive
 {
-    public Vector3 color = new Vector3(100, 40, 50); // later: in material implementatie
+    public Vector3 color = new Vector3(1, 0.1f, 0.1f); // later: in material implementatie
 
     ///<summary>
     ///Method that calculates distance from ray to primitive, and updates ray.t if this distance is shorter than the actual value of ray.t.

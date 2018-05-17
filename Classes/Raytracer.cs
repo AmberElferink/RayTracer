@@ -39,9 +39,9 @@ namespace Template
 
         int CreateColor(Vector3 color)
         {
-            int r = (int)color.X;
-            int g = (int)color.Y;
-            int b = (int)color.Z;
+            int r = (int)color.X*255;
+            int g = (int)color.Y*255;
+            int b = (int)color.Z*255;
             return (r << 16) + (g << 8) + b;
         }
 
