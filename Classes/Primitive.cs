@@ -61,7 +61,7 @@ public class Sphere : Primitive
         Vector3 q = c - t * ray.D;
         float p2 = Vector3.Dot(q, q);
         if (p2 > this.r2) return null;
-        t = (float)(-Math.Sqrt(this.r2 - p2));
+        t -= (float)(Math.Sqrt(this.r2 - p2));
         if ((t < ray.t) && (t > 0))
         {
             ray.t = t;

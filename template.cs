@@ -20,7 +20,7 @@ namespace Template
 			GL.Enable( EnableCap.Texture2D );
 			GL.Disable( EnableCap.DepthTest );
 			GL.Hint( HintTarget.PerspectiveCorrectionHint, HintMode.Nicest );
-			ClientSize = new Size( 640, 400 );
+			ClientSize = new Size( 640, 640 );
 			raytracer = new RayTracer();
 			raytracer.screen = new Surface( Width, Height );
 			Sprite.target = raytracer.screen;
