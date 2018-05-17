@@ -6,10 +6,12 @@ public class Scene
 {
     List<Light> Lights = new List<Light>();
     List<Primitive> Primitives = new List<Primitive>();
-    
-	public Scene()
+    float eps = 0.00001f;
+
+    public Scene()
 	{
         Primitives.Add(new Sphere(new Vector3(3, 0, 5), 2));
+        Lights.Add(new Light(new Vector3(1, 0, -1), new Vector3(1, 1, 1)));
         //Sphere sphere2 = new Sphere(new Vector3(2, 0, 5), 3);
     }
 
@@ -30,4 +32,21 @@ public class Scene
         return intersect;
     }
     
+    public Vector3 LightTransport(Intersection intersection) // hoort een kleur-vector (met helderheid) te returnen
+    {
+        Vector3 totalLight = new Vector3(0, 0, 0);
+        foreach (Light light in Lights)
+        {
+            Vector3 L = light.position - intersection.point;
+            float tmax = L.Length - 2 * eps; // distance from intersection point to light, with correction for offset
+            Ray ray = new Ray(intersection.point + eps * Vector3.Normalize(L), L, tmax);
+            Intersection check = Intersect(ray);
+            if (check == null)
+                totalLight += light.color * Vector3.Dot(intersection.norm, L) * 1 / (tmax * tmax);
+            // TODO: hier moet nog de kleur van de primitieve in verwerkt worden. (Misschien vanuit andere methode)
+        }
+        return totalLight;
+        // TODO: zorgen dat deze methode wordt aangeroepen vanuit Raytracer
+        // TODO: zorgen dat totalLight altijd tussen 0 en 1 ligt. (Belangrijker als er meerdere lichtbronnen zijn)
+    }
 }
