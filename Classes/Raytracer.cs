@@ -11,7 +11,6 @@ namespace Template
         public Camera camera;
         public Scene scene;
         int RscreenWidth;
-        int RscreenHeight;
 
         public Raytracer(Surface screenApp)
         {
