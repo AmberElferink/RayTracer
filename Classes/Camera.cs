@@ -20,17 +20,17 @@ public class Camera
     public Camera(Vector3 E, Vector3 T, double a)
     {
         this.E = E;
-        this.V = Vector3.Normalize(T - E); // T = target
+        V = Vector3.Normalize(T - E); // T = target
         this.a = a * Math.PI / 180; // input a must be in degrees; it is then converted to radians
         float w = (float)(2 * Math.Tan(this.a / 2)); // width of screen
         float h = w; // height of screen
-        this.C = E + V;
+        C = E + V;
         Vector3 y = new Vector3(0, 1, 0);
-        Vector3 right = Vector3.Normalize(Vector3.Cross(this.V, y));
-        Vector3 up = Vector3.Cross(right, this.V); // already normalized
-        this.p0 = this.C - (w / 2) * right + (h / 2) * up;
-        this.p1 = this.p0 + w * right;
-        this.p2 = this.p0 - h * up;
+        Vector3 right = Vector3.Normalize(Vector3.Cross(y, V));
+        Vector3 up = Vector3.Cross(V, right); // already normalized
+        p0 = C - (w / 2) * right + (h / 2) * up;
+        p1 = p0 + w * right;
+        p2 = p0 - h * up;
 
         /* this.E = new Vector3(0, 0, 0);
         this.V = new Vector3(0, 0, 1);
