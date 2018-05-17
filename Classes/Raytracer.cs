@@ -19,6 +19,7 @@ namespace Template
         }
         public void Render()
         {
+            Ray ray;
 
             for (int y = 0; y < screen.height; y++)
             { 
@@ -27,7 +28,7 @@ namespace Template
                     Vector3 D = (float)x / (float)screen.width * (camera.p1 - camera.p0) + (float)y / (float)screen.height * (camera.p2 - camera.p0) + camera.p0 - camera.E;
                     D.Normalize();
 
-                    Ray ray = new Ray(camera.E, D, 1E30f);
+                    ray = new Ray(camera.E, D, 1E30f);
                     Intersection intersection = scene.Intersect(ray);
 
                     /*if (intersection != null)
