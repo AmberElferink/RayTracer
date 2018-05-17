@@ -8,7 +8,7 @@ using OpenTK.Graphics.OpenGL;
 
 public abstract class Primitive
 {
-    public Vector3 color = new Vector3(1, 0.1f, 0.1f); // later: in material implementatie
+    public Vector3 color; // later: in material implementatie
 
     ///<summary>
     ///Method that calculates distance from ray to primitive, and updates ray.t if this distance is shorter than the actual value of ray.t.
@@ -23,10 +23,11 @@ public class Plane : Primitive
     public Vector3 N; // normal of plane
     public float d; // equation p.N + d = 0 for a point p on the plane
 
-    public Plane(Vector3 N, float d)
+    public Plane(Vector3 N, float d, Vector3 color)
     {
         this.N = N;
         this.d = d;
+        this.color = color;
     }
 
     public override Intersection Intersect(Ray ray)
@@ -47,11 +48,12 @@ public class Sphere : Primitive
     public float r; // radius of sphere
     public float r2; // radius squared
 
-    public Sphere(Vector3 center, float r)
+    public Sphere(Vector3 center, float r, Vector3 color)
     {
         this.center = center;
         this.r = r;
         this.r2 = r * r;
+        this.color = color;
     }
 
     public override Intersection Intersect(Ray ray)
