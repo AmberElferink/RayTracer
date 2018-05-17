@@ -34,7 +34,7 @@ namespace Template
                     /* if (intersection != null)
                         screen.pixels[x + y * screen.width] = CreateColor(intersection.prim.color); */
 
-                    
+                    // TODO: LightTransport aanroepen
                 }
             }
         }
