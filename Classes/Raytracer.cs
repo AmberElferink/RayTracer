@@ -32,8 +32,10 @@ namespace Template
                     ray = new Ray(camera.E, D, 1E30f);
                     Intersection intersection = scene.Intersect(ray);
 
-                    if (intersection != null)
-                        screen.pixels[x + y * screen.width] = CreateColor(intersection.prim.color);
+                    /* if (intersection != null)
+                        screen.pixels[x + y * screen.width] = CreateColor(intersection.prim.color); */
+
+                    // TODO: LightTransport aanroepen
                 }
             }
         }
