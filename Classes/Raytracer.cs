@@ -15,16 +15,12 @@ namespace Template
         public Raytracer(Surface screenApp)
         {
             screen = screenApp;
-            camera = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 1), 90);
+            camera = new Camera(new Vector3(0, 0, 0), new Vector3(-2, 0, 4), 90);
             scene = new Scene();
             RscreenWidth = screen.width / 2;
         }
         public void Render()
         {
-
-
-
-
             for (int y = 0; y < screen.height; y++)
             {
                 for (int x = 0; x < RscreenWidth; x++)

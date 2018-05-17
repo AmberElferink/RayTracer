@@ -36,7 +36,7 @@ public class Plane : Primitive
         if ((t < ray.t) && (t > 0))
         {
             ray.t = t;
-            return new Intersection(t, ray.O + t * ray.D, N, this);
+            return new Intersection(t, ray.O + t * ray.D, this.N, this);
         }
         else return null;
     }

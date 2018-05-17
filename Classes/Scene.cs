@@ -13,7 +13,8 @@ public class Scene
         Primitives.Add(new Sphere(new Vector3(-2, 0, 4), 2, new Vector3(1, 0.1f, 0.1f)));
         Primitives.Add(new Sphere(new Vector3(3, 0, 10), 2, new Vector3(0.1f, 1, 0.1f)));
         Primitives.Add(new Sphere(new Vector3(1, 2, 8), 2.5f, new Vector3(0.1f, 0.1f, 1)));
-        //Primitives.Add(new Plane(new Vector3(1, 2, 8), 2.5f, new Vector3(0.1f, 0.1f, 1)));
+        Primitives.Add(new Plane(new Vector3(0, 1, 0), 3, new Vector3(0.3f, 0.75f, 1))); 
+        // TODO: testen of het werkt voor andere planes. (Geen problemen met minteken normaal?)
         Lights.Add(new Light(new Vector3(1, 0, -1), new Vector3(25, 25, 25)));
         Lights.Add(new Light(new Vector3(0, 6, 0), new Vector3(12, 12, 12)));
     }
@@ -51,6 +52,8 @@ public class Scene
                 float dotpr = Vector3.Dot(intersection.norm, L);
                 if (dotpr > 0)
                     totalLight += light.color * Vector3.Dot(intersection.norm, L) * (1 / (dist * dist)) * intersection.prim.color;
+                // IDEE: prim.color: voor een textured plane moet je weten welk punt je precies raakt, en daaruit bepalen wat de kleur is (schaakbord)
+                // (dus in plaats van dat de hele plane één kleur heeft) Dit kan mbv twee parameters lambda1 en lambda2.
             }
         }
         if (totalLight.X > 1)
