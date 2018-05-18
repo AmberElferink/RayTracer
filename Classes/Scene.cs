@@ -4,18 +4,18 @@ using OpenTK;
 
 public class Scene
 {
-    List<Light> Lights = new List<Light>();
-    List<Primitive> Primitives = new List<Primitive>();
+    List<Light> lights = new List<Light>();
+    List<Primitive> primitives = new List<Primitive>();
     float eps = 0.00001f;
 
     public Scene()
 	{
-        Primitives.Add(new Sphere(new Vector3(-2, 0, 4), 2, new Vector3(1, 0.1f, 0.1f)));
-        Primitives.Add(new Sphere(new Vector3(3, 0, 10), 2, new Vector3(0.1f, 1, 0.1f)));
-        Primitives.Add(new Sphere(new Vector3(1, 2, 8), 2.5f, new Vector3(0.1f, 0.1f, 1)));
+        primitives.Add(new Sphere(new Vector3(-2, 0, 4), 2, new Vector3(1, 0.1f, 0.1f)));
+        primitives.Add(new Sphere(new Vector3(3, 0, 10), 2, new Vector3(0.1f, 1, 0.1f)));
+        primitives.Add(new Sphere(new Vector3(1, 2, 8), 2.5f, new Vector3(0.1f, 0.1f, 1)));
         //Primitives.Add(new Plane(new Vector3(1, 2, 8), 2.5f, new Vector3(0.1f, 0.1f, 1)));
-        Lights.Add(new Light(new Vector3(1, 0, -1), new Vector3(25, 25, 25)));
-        Lights.Add(new Light(new Vector3(0, 6, 0), new Vector3(12, 12, 12)));
+        lights.Add(new Light(new Vector3(1, 0, -1), new Vector3(25, 25, 25)));
+        lights.Add(new Light(new Vector3(0, 6, 0), new Vector3(12, 12, 12)));
     }
 
     ///<summary>
@@ -26,7 +26,7 @@ public class Scene
     public Intersection Intersect(Ray ray)
     {
         Intersection intersect = null;
-        foreach(Primitive primitive in Primitives)
+        foreach(Primitive primitive in primitives)
         {
             Intersection temp = primitive.Intersect(ray);
             if (temp != null)
@@ -38,7 +38,7 @@ public class Scene
     public Vector3 LightTransport(Intersection intersection)
     {
         Vector3 totalLight = new Vector3(0, 0, 0);
-        foreach (Light light in Lights)
+        foreach (Light light in lights)
         {
             Vector3 L = light.position - intersection.point;
             float dist = L.Length;
@@ -60,5 +60,10 @@ public class Scene
         if (totalLight.Z > 1)
             totalLight.Z = 1;
         return totalLight;
+    }
+
+    public List<Primitive> Primitives
+    {
+        get { return primitives;}
     }
 }

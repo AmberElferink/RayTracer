@@ -7,6 +7,7 @@ namespace Template
     public class Raytracer
     {
         // member variables
+        Debug debug;
         Surface screen;
         public Camera camera;
         public Scene scene;
@@ -17,6 +18,7 @@ namespace Template
             screen = screenApp;
             camera = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 1), 90);
             scene = new Scene();
+            debug = new Debug(screen, scene);
             RscreenWidth = screen.width / 2;
         }
         public void Render()
