@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using OpenTK;
 
+
+
 public class Scene
 {
     List<Light> lights = new List<Light>();
@@ -17,8 +19,8 @@ public class Scene
         // TODO: testen of het werkt voor andere planes. (Geen problemen met minteken normaal?)
         Primitives.Add(new Plane(new Vector3(0, 0, -1), 11, new Vector3(1, 1, 0.1f)));
         // Update: dit vlak werkt ook!
-        Lights.Add(new Light(new Vector3(1, 0, -1), new Vector3(25, 25, 25)));
-        Lights.Add(new Light(new Vector3(0, 6, 0), new Vector3(12, 12, 12)));
+        lights.Add(new Light(new Vector3(1, 0, -1), new Vector3(25, 25, 25)));
+        lights.Add(new Light(new Vector3(0, 6, 0), new Vector3(12, 12, 12)));
     }
 
     ///<summary>

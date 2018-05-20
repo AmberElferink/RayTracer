@@ -19,8 +19,9 @@ namespace Template
 
         void DrawPrimitives()
         {
-            foreach (Sphere sphere in scene.Primitives)
+            foreach (Primitive primitive in scene.Primitives)
             {
+                //if(primitive == sphere)
                // sphere.center.X, sphere.center.Z
             }
         }
