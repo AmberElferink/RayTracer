@@ -47,7 +47,11 @@ public class Scene
         {
             Vector3 L = light.position - intersection.point;
             float dist = L.Length;
-            L = Vector3.Normalize(L);
+            if(Vector3.Dot(intersection.norm, L) > 0)
+            {
+                L = Vector3.Normalize(L);
+            }
+
             float tmax = dist - 2 * eps; // distance from intersection point to light, with correction for offset
             Ray ray = new Ray(intersection.point + eps * L, L, tmax);
             Intersection occluder = Intersect(ray);
