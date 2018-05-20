@@ -51,7 +51,11 @@ public class Scene
             float tmax = dist - 2 * eps; // distance from intersection point to light, with correction for offset
             Ray ray = new Ray(intersection.point + eps * L, L, tmax);
             Intersection occluder = Intersect(ray);
-            if (occluder == null)
+            if(occluder != null) //shadowray intersects, go to next lightsource
+            {
+                continue;
+            }
+            else //shadowray doesn't intersect. Add light value for this.
             {
                 float dotpr = Vector3.Dot(intersection.norm, L);
                 if (dotpr > 0)
