@@ -48,12 +48,14 @@ public class Sphere : Primitive
     public Vector3 center; // center of sphere
     public float r; // radius of sphere
     public float r2; // radius squared
+    public float divr; // 1/r
 
     public Sphere(Vector3 center, float r, Vector3 color)
     {
         this.center = center;
         this.r = r;
         this.r2 = r * r;
+        this.divr = 1 / r;
         this.color = color;
     }
 
@@ -69,7 +71,7 @@ public class Sphere : Primitive
         {
             ray.t = t;
             Vector3 P = ray.O + t * ray.D; // intersection point of ray with sphere
-            return new Intersection(t, P, (P - this.center) / this.r, this);
+            return new Intersection(t, P, (P - this.center) * divr, this);
         }
         else return null;
     }
