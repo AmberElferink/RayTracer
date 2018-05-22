@@ -26,7 +26,7 @@ public class Plane : Primitive
 
     public Plane(Vector3 N, float d, Material material, bool checkerboard)
     {
-        this.N = N;
+        this.N = Vector3.Normalize(N);
         this.d = d;
         this.material = material;
         this.checkerboard = checkerboard;

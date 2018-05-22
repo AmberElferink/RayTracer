@@ -3,7 +3,6 @@ using System;
 
 namespace Template
 {
-
     public class Raytracer
     {
         // member variables
@@ -29,14 +28,8 @@ namespace Template
                 {
                     Vector3 D = (float)x / (float)RscreenWidth* (camera.p1 - camera.p0) + (float)y / (float)screen.height * (camera.p2 - camera.p0) + camera.p0 - camera.E;
                     D.Normalize();
-
                     Ray ray = new Ray(camera.E, D, 1E30f);
-                    Intersection intersection = scene.Intersect(ray);
-
-                    if (intersection != null)
-                    {
-                        screen.pixels[x + y * screen.width] = CreateColor(scene.LightTransport(intersection));
-                    } 
+                    screen.pixels[x + y * screen.width] = CreateColor(scene.LightTransport(ray));
                 }
             }
         }
