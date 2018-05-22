@@ -9,24 +9,32 @@ namespace Template
     {
         Surface screen;
         Scene scene;
+        int translateX, translateY, offsetX;
+        int DscreenWidth;
+        float scale;
         public Debug(Surface screenApp, Scene scene)
         {
             screen = screenApp;
-            this.scene = scene;            
+            this.scene = scene;
+            DscreenWidth = screen.width / 2; //width of debugscreen and left edge of debugscreen.
+
+            scale = DscreenWidth / 10.0f;
+            offsetX = DscreenWidth;
+            translateX = DscreenWidth / 2;
+            translateY = DscreenWidth / 2;
+
         }
 
         public void Render()
         {
             DrawCircles();
-
         }
 
         void DrawCircles()
         {
             int x;
             int y;
-            int scaling = 36;
-            int offset = 7;
+
 
             foreach (Primitive primitive in scene.Primitives)
             {
@@ -34,20 +42,23 @@ namespace Template
                 {
                     Sphere sphere = (Sphere)primitive;
 
-                    int prevX = (int)((sphere.center.X + sphere.r + offset) * scaling);
-                    int prevY = (int)((-sphere.center.Z + offset) * scaling);
+                    int prevX = (int)((sphere.center.X + sphere.r) * scale + offsetX + translateX);
+                    int prevY = (int)(-sphere.center.Z * scale + translateY);
                     for (float theta = 0; theta <= (float)2 * Math.PI + 1; theta += (float)(2 * Math.PI / 100))   //2PI for a circle. Existing of 100 line pieces, so 100 steps
                     {
-                        x = (int)((sphere.center.X + Math.Cos(theta) * sphere.r + offset) *scaling);
-                        y = (int)((-sphere.center.Z + Math.Sin(theta) * sphere.r + offset) * scaling);
-                        screen.Line(screen.width / 2 + prevX, prevY, screen.width/2 + x, y, CreateColor(sphere.material.color));
+                        x = (int)((sphere.center.X + Math.Cos(theta) * sphere.r) *scale + offsetX + translateX);
+                        y = (int)((-sphere.center.Z + Math.Sin(theta) * sphere.r) * scale + translateY);
+                        screen.Line(prevX, prevY, x, y, CreateColor(sphere.material.color));
                         prevX = x;
                         prevY = y;
                     }
                 }
-
             }
+        }
 
+        public void DrawRay(Vector3 start, Vector3 end)
+        {
+            screen.Line((int)(offsetX + translateX + start.X*scale), (int)(translateY + start.Z*-scale), (int)(translateX + offsetX + end.X*scale), (int)(translateY + end.Z*-scale), CreateColor(new Vector3(1, 1, 0)));
         }
 
         int CreateColor(Vector3 color)

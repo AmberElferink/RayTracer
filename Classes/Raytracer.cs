@@ -12,6 +12,7 @@ namespace Template
         public Camera camera;
         public Scene scene;
         int RscreenWidth;
+        int raycounter = 0;
 
         public Raytracer(Surface screenApp)
         {
@@ -24,16 +25,33 @@ namespace Template
         public void Render()
         {
             debug.Render();
+
+                
+
+                
             for (int y = 0; y < screen.height; y++)
             {
+                raycounter = 0;
                 for (int x = 0; x < RscreenWidth; x++)
                 {
+
                     Vector3 D = (float)x / (float)RscreenWidth* (camera.p1 - camera.p0) + (float)y / (float)screen.height * (camera.p2 - camera.p0) + camera.p0 - camera.E;
                     D.Normalize();
 
                     Ray ray = new Ray(camera.E, D, 1E30f);
-                    Intersection intersection = scene.Intersect(ray);
 
+                    Intersection intersection = scene.Intersect(ray);
+                    if(y == screen.height / 2 && intersection.prim is Sphere)
+                    {
+                        raycounter++;
+                        if(raycounter >= 10)
+                        {
+                            debug.DrawRay(camera.E, intersection.point);
+                            raycounter = 0;
+                        }
+
+                    }
+                    
                     if (intersection != null)
                     {
                         screen.pixels[x + y * screen.width] = CreateColor(scene.LightTransport(intersection));
