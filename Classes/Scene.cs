@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using OpenTK;
 
+
+
 public class Scene
 {
-    List<Light> Lights = new List<Light>();
-    List<Primitive> Primitives = new List<Primitive>();
+    List<Light> lights = new List<Light>();
+    List<Primitive> primitives = new List<Primitive>();
     float eps = 0.00001f;
 
     public Scene()
@@ -17,8 +19,8 @@ public class Scene
         // TODO: testen of het werkt voor andere planes. (Geen problemen met minteken normaal?)
         Primitives.Add(new Plane(new Vector3(0, 0, -1), 12, new Vector3(1, 1, 0.7f)));
         // Update: dit vlak werkt ook!
-        Lights.Add(new Light(new Vector3(1, 0, -1), new Vector3(25, 25, 25)));
-        Lights.Add(new Light(new Vector3(0, 6, 0), new Vector3(12, 12, 12)));
+        lights.Add(new Light(new Vector3(1, 0, -1), new Vector3(25, 25, 25)));
+        lights.Add(new Light(new Vector3(0, 6, 0), new Vector3(12, 12, 12)));
     }
 
     ///<summary>
@@ -29,7 +31,7 @@ public class Scene
     public Intersection Intersect(Ray ray)
     {
         Intersection intersect = null;
-        foreach(Primitive primitive in Primitives)
+        foreach(Primitive primitive in primitives)
         {
             Intersection temp = primitive.Intersect(ray);
             if (temp != null)
@@ -41,15 +43,23 @@ public class Scene
     public Vector3 LightTransport(Intersection intersection) // geeft kleur 
     {
         Vector3 totalLight = new Vector3(0, 0, 0);
-        foreach (Light light in Lights)
+        foreach (Light light in lights)
         {
             Vector3 L = light.position - intersection.point;
             float dist = L.Length;
-            L = Vector3.Normalize(L);
+            if(Vector3.Dot(intersection.norm, L) > 0)
+            {
+                L = Vector3.Normalize(L);
+            }
+
             float tmax = dist - 2 * eps; // distance from intersection point to light, with correction for offset
             Ray ray = new Ray(intersection.point + eps * L, L, tmax);
             Intersection occluder = Intersect(ray);
-            if (occluder == null)
+            if(occluder != null) //shadowray intersects, go to next lightsource
+            {
+                continue;
+            }
+            else //shadowray doesn't intersect. Add light value for this.
             {
                 float dotpr = Vector3.Dot(intersection.norm, L);
                 if (dotpr > 0)
@@ -66,5 +76,10 @@ public class Scene
         if (totalLight.Z > 1)
             totalLight.Z = 1;
         return totalLight;
+    }
+
+    public List<Primitive> Primitives
+    {
+        get { return primitives;}
     }
 }
