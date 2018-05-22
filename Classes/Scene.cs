@@ -10,15 +10,15 @@ public class Scene
 
     public Scene()
 	{
-        Primitives.Add(new Sphere(new Vector3(-2, 0, 4), 1, new Material(Material.materialType.diffuse, new Vector3(1, 0.1f, 0.1f)), false));
-        Primitives.Add(new Sphere(new Vector3(-6, 1, 6), 1.5f, new Material(Material.materialType.diffuse, new Vector3(0.1f, 1, 0.1f)), false));
-        Primitives.Add(new Sphere(new Vector3(1, 2, 7), 1.5f, new Material(Material.materialType.diffuse, new Vector3(0.1f, 0.1f, 1)), false));
+        Primitives.Add(new Sphere(new Vector3(2, -0.5f, 4), 1, new Material(Material.materialType.diffuse, new Vector3(1, 0.1f, 0.1f)), false));
+        Primitives.Add(new Sphere(new Vector3(0.2f, -0.7f, 2.5f), 0.5f, new Material(Material.materialType.diffuse, new Vector3(0.1f, 1, 0.1f)), false));
+        Primitives.Add(new Sphere(new Vector3(-0.3f, 0.2f, 4), 1, new Material(Material.materialType.diffuse, new Vector3(0.1f, 0.1f, 1)), false));
         Primitives.Add(new Plane(new Vector3(0, 1, 0), 3, new Material(Material.materialType.diffuse, new Vector3(0.3f, 0.75f, 1)), true));
         // TODO: testen of het werkt voor andere planes. (Geen problemen met minteken normaal?)
         Primitives.Add(new Plane(new Vector3(0, 0, -1), 12, new Material(Material.materialType.diffuse, new Vector3(1, 1, 0.7f)), false));
-        lights.Add(new Light(new Vector3(1, 0, -1), new Vector3(25, 25, 25)));
-        lights.Add(new Light(new Vector3(0, 6, 0), new Vector3(12, 12, 12)));
-        lights.Add(new Light(new Vector3(2, 3, 4), new Vector3(10, 10, 30)));
+        lights.Add(new Light(new Vector3(-1, 2, -1), new Vector3(20, 20, 20)));
+        lights.Add(new Light(new Vector3(1, 6, 3), new Vector3(10, 10, 10)));
+        lights.Add(new Light(new Vector3(2, 3, -4), new Vector3(2, 2, 10)));
     }
 
     ///<summary>

@@ -8,8 +8,7 @@ using OpenTK.Graphics.OpenGL;
 
 public abstract class Primitive
 {
-    //public Vector3 color; // later: in material implementatie
-    public Material material;
+    public Material material; // primitive can be made of diffuse or reflective material
     public bool checkerboard; // checks if a primitive has a checkerboard pattern
 
     ///<summary>

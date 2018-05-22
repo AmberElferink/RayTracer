@@ -8,11 +8,7 @@ public class Material
 
     public Material(materialType type, Vector3 color)
     {
-        this.type = (int)type;
-        // 0 = diffuse, 1 = reflective
-        if (this.type == 1)
-            this.color = new Vector3(1, 1, 1); // reflective surfaces are always white
-        else
-            this.color = color; // diffuse surfaces can have any color
+        this.type = (int)type; // 0 = diffuse, 1 = reflective
+        this.color = color;
     }
 }
