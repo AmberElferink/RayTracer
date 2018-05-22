@@ -23,6 +23,7 @@ namespace Template
         }
         public void Render()
         {
+            debug.Render();
             for (int y = 0; y < screen.height; y++)
             {
                 for (int x = 0; x < RscreenWidth; x++)
