@@ -16,7 +16,6 @@ public class Camera
     public Vector3 p1; // upper right corner of screen
     public Vector3 p2; // bottom left corner of screen
 
-
     public Camera(Vector3 E, Vector3 T, double a)
     {
         this.E = E;
