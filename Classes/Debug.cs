@@ -26,7 +26,7 @@ namespace Template
             int x;
             int y;
             int scaling = 36;
-            int offset = 5;
+            int offset = 7;
 
             foreach (Primitive primitive in scene.Primitives)
             {
@@ -35,16 +35,14 @@ namespace Template
                     Sphere sphere = (Sphere)primitive;
 
                     int prevX = (int)((sphere.center.X + sphere.r + offset) * scaling);
-                    int prevY = (int)((sphere.center.Z + offset) * scaling);
+                    int prevY = (int)((-sphere.center.Z + offset) * scaling);
                     for (float theta = 0; theta <= (float)2 * Math.PI + 1; theta += (float)(2 * Math.PI / 100))   //2PI for a circle. Existing of 100 line pieces, so 100 steps
                     {
                         x = (int)((sphere.center.X + Math.Cos(theta) * sphere.r + offset) *scaling);
-                        y = (int)((sphere.center.Z + Math.Sin(theta) * sphere.r + offset) * scaling);
+                        y = (int)((-sphere.center.Z + Math.Sin(theta) * sphere.r + offset) * scaling);
                         screen.Line(screen.width / 2 + prevX, prevY, screen.width/2 + x, y, CreateColor(sphere.material.color));
                         prevX = x;
                         prevY = y;
-
-                        //screen.pixels[screen.width / 2 + x + (y + screen.height / 2) * screen.width] = CreateColor(sphere.material.color);
                     }
                 }
 
