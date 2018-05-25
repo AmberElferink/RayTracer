@@ -15,7 +15,15 @@ namespace Template
 
         public Scene()
         {
-            Primitives.Add(new Sphere(new Vector3(2, 0, 4), 1, new Material(Material.materialType.reflective, new Vector3(1, 0.1f, 0.1f), 0.6f), false));
+            Primitives.Add(
+                new Sphere(
+                    new Vector3(2, 0, 4), // center of the sphere
+                    1, // radius of the sphere
+                    new Material( // material of the sphere
+                        Material.materialType.reflective, // type of the material
+                        new Vector3(1, 0.1f, 0.1f), // color of the material 
+                        0.6f), // reflectiveness of the material
+                    false)); // is it a checkerboard
             Primitives.Add(new Sphere(new Vector3(0.2f, -0.7f, 2.5f), 0.5f, new Material(Material.materialType.reflective, new Vector3(0.1f, 1, 0.1f), 0.6f), false));
             Primitives.Add(new Sphere(new Vector3(-0.3f, 0.2f, 4), 1, new Material(Material.materialType.reflective, new Vector3(0.1f, 0.1f, 1), 0.6f), false));
             Primitives.Add(new Plane(new Vector3(0, 1, 0), 3, new Material(Material.materialType.reflective, new Vector3(0.3f, 0.75f, 1), 0.8f), true));
