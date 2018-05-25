@@ -23,6 +23,7 @@ namespace Template
         }
         public void Render()
         {
+            screen.Clear(0);
             debug.Render();
 
             for (int y = 0; y < screen.height; y++)
@@ -33,18 +34,27 @@ namespace Template
                     D.Normalize();
                     Ray ray = new Ray(camera.E, D, 1E30f);
                     Intersection intersection = scene.Intersect(ray);
-                    screen.pixels[x + y * screen.width] = CreateColor(scene.LightTransport(ray, intersection));
+                    screen.pixels[x + y * screen.width] = CreateColor(scene.LightTransport(ray, intersection, debug));
                     
                     //Debug output
-                    if (y == screen.height / 2 && intersection.prim is Sphere)
+                    if (y == screen.height / 2)
                     {
                         raycounter++;
-                        if (raycounter >= 10)
+                        if(raycounter >= 10)
                         {
-                            debug.DrawRay(camera.E, intersection.point);
+                            if (intersection.prim is Sphere)
+                            {
+                                    debug.DrawRay(camera.E, intersection.point);
+                            }
+                            else
+                            {
+                                debug.DrawRay(camera.E, ray.D * ray.t);
+                            }
                             raycounter = 0;
                         }
+
                     }
+
                 }
             }
         }
@@ -56,5 +66,6 @@ namespace Template
             int b = (int)(Math.Min(1, color.Z) * 255);
             return (r << 16) + (g << 8) + b;
         }
+
     } //class raytracer
 } //namespace template

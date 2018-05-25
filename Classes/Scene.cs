@@ -53,7 +53,7 @@ namespace Template
             return intersect;
         }
 
-        public Vector3 LightTransport(Ray ray, Intersection intersection) // returns the color of a pixel
+        public Vector3 LightTransport(Ray ray, Intersection intersection, Debug debug) // returns the color of a pixel
         {
 
             // if the ray finds does not intersect any primitive, return black
@@ -66,11 +66,16 @@ namespace Template
                 recursionDepth++;
                 Vector3 R = ray.D - 2 * intersection.norm * Vector3.Dot(ray.D, intersection.norm);
                 Ray newray = new Ray(intersection.point + eps * R, R, 1E30f);
+
+                Intersection newIntersection = Intersect(newray);
+                
+                DebugReflRay(newray, intersection, debug);
+
                 if (!intersection.prim.checkerboard)
                     return intersection.prim.material.color * (1 - intersection.prim.material.reflectiveness) +
-                        (intersection.prim.material.reflectiveness) * LightTransport(newray, Intersect(newray));
+                        (intersection.prim.material.reflectiveness) * LightTransport(newray, newIntersection, debug);
                 else return (((int)(2 * intersection.point.X) + (int)intersection.point.Z) & 1) * (1 - intersection.prim.material.reflectiveness) * Vector3.One +
-                        (intersection.prim.material.reflectiveness) * LightTransport(newray, Intersect(newray));
+                        (intersection.prim.material.reflectiveness) * LightTransport(newray, newIntersection, debug);
                 // does not work for checkered plane
                 // for a simple other plane, there is reflection, but the planes appear transparent...
 
@@ -111,6 +116,11 @@ namespace Template
             if (totalLight.Z > 1)
                 totalLight.Z = 1;
             return totalLight;
+        }
+
+        void DebugReflRay(Ray ray, Intersection intersection, Debug debug)
+        {
+
         }
 
         public List<Primitive> Primitives
