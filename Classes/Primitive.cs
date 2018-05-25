@@ -11,11 +11,7 @@ public abstract class Primitive
     public Material material; // primitive can be made of diffuse or reflective material
     public bool checkerboard; // checks if a primitive has a checkerboard pattern
 
-    ///<summary>
-    ///Method that calculates distance from ray to primitive, and updates ray.t if this distance is shorter than the actual value of ray.t.
-    ///</summary>
-    /// <param name="ray">a ray that gets shot and maybe intersects a primitive</param>
-    /// <returns></returns>
+    // Method that calculates distance from ray to primitive, and updates ray.t if this distance is shorter than the actual value of ray.t.
     public abstract Intersection Intersect(Ray ray);
 }
 
@@ -42,6 +38,22 @@ public class Plane : Primitive
         }
         else return null;
         // TODO: checken of er een probleem is als de ray parallel is aan het vlak
+    }
+}
+
+public class CheckeredPlane : Plane
+{
+    public CheckeredPlane(Vector3 N, float d, Material material, bool checkerboard) : base(N, d, material, checkerboard)
+    {
+        this.N = Vector3.Normalize(N);
+        this.d = d;
+        this.material = material;
+        this.checkerboard = checkerboard;
+    }
+
+    public Vector3 GetPixelColor(Vector3 Point)
+    {
+        return (((int)(2 * Point.X) + (int)Point.Z) & 1) * Vector3.One;
     }
 }
 

@@ -19,5 +19,20 @@ public class Intersection
         this.norm = norm;
         this.prim = prim;
     }
+
+    public Vector3 Color
+    {
+        get { return prim.material.color; }
+    }
+
+    public float Reflectiveness
+    {
+        get { return prim.material.reflectiveness; }
+    }
+
+    public int Type
+    {
+        get { return prim.material.type; }
+    }
 }
 
