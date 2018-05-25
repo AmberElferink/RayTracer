@@ -53,7 +53,7 @@ namespace Template
             return intersect;
         }
 
-        public Vector3 LightTransport(Ray ray, Intersection intersection, Debug debug) // returns the color of a pixel
+        public Vector3 LightTransport(Ray ray, Intersection intersection, Debug debug, int raynumber) // returns the color of a pixel
         {
 
             // if the ray finds does not intersect any primitive, return black
@@ -68,14 +68,20 @@ namespace Template
                 Ray newray = new Ray(intersection.point + eps * R, R, 1E30f);
 
                 Intersection newIntersection = Intersect(newray);
-                
-                DebugReflRay(newray, intersection, debug);
+
+                raynumber++;
+                if(newIntersection != null && newIntersection.prim is Sphere)
+                  if(raynumber >= 3 )
+                    {
+                        debug.DrawRay(intersection.point, newIntersection.point, raynumber);
+                    }
+               
 
                 if (!intersection.prim.checkerboard)
                     return intersection.prim.material.color * (1 - intersection.prim.material.reflectiveness) +
-                        (intersection.prim.material.reflectiveness) * LightTransport(newray, newIntersection, debug);
+                        (intersection.prim.material.reflectiveness) * LightTransport(newray, newIntersection, debug, raynumber);
                 else return (((int)(2 * intersection.point.X) + (int)intersection.point.Z) & 1) * (1 - intersection.prim.material.reflectiveness) * Vector3.One +
-                        (intersection.prim.material.reflectiveness) * LightTransport(newray, newIntersection, debug);
+                        (intersection.prim.material.reflectiveness) * LightTransport(newray, newIntersection, debug, raynumber);
                 // does not work for checkered plane
                 // for a simple other plane, there is reflection, but the planes appear transparent...
 
@@ -118,7 +124,7 @@ namespace Template
             return totalLight;
         }
 
-        void DebugReflRay(Ray ray, Intersection intersection, Debug debug)
+        void DebugReflRay(Intersection intersection, Intersection newIntersection, int raynumber)
         {
 
         }
