@@ -17,7 +17,7 @@ namespace Template
         public Raytracer(Surface screenApp)
         {
             screen = screenApp;
-            camera = new Camera(new Vector3(0, 0, 0), new Vector3(0.1f, 0, 1), 70);
+            camera = new Camera(new Vector3(0, 0.2f, -2.2f), new Vector3(0.3f, -0.5f, 0.8f), 40);
             scene = new Scene();
             debug = new Debug(screen, scene);
             RscreenWidth = screen.width / 2;
@@ -37,7 +37,7 @@ namespace Template
                     int raynumber = 0;
                     Ray ray = new Ray(camera.E, D, 1E30f);
                     Intersection intersection = scene.Intersect(ray);
-                    screen.pixels[x + y * screen.width] = CreateColor(scene.LightTransport(ray, intersection, debug, raynumber));
+                    screen.pixels[x + y * screen.width] = CreateColor(scene.Trace(ray, intersection, debug, raynumber));
                     
                     //Debug output
                     if (y == screen.height / 2)
@@ -70,8 +70,5 @@ namespace Template
             int b = (int)(Math.Min(1, color.Z) * 255);
             return (r << 16) + (g << 8) + b;
         }
-
-
-
     } //class raytracer
 } //namespace template

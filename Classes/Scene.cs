@@ -17,30 +17,51 @@ namespace Template
         {
             Primitives.Add(
                 new Sphere(
-                    new Vector3(2, 0, 4), // center of the sphere
-                    1, // radius of the sphere
+                    new Vector3(1.5f, 0, 4), 0.9f, // center and radius of the sphere
                     new Material( // material of the sphere
                         Material.materialType.reflective, // type of the material
-                        new Vector3(1, 0.1f, 0.1f), // color of the material 
-                        0.6f), // reflectiveness of the material
-                    false)); // is it a checkerboard
-            Primitives.Add(new Sphere(new Vector3(0.2f, -0.7f, 2.5f), 0.5f, new Material(Material.materialType.reflective, new Vector3(0.1f, 1, 0.1f), 0.6f), false));
-            Primitives.Add(new Sphere(new Vector3(-0.3f, 0.2f, 4), 1, new Material(Material.materialType.reflective, new Vector3(0.1f, 0.1f, 1), 0.6f), false));
-            Primitives.Add(new Plane(new Vector3(0, 1, 0), 3, new Material(Material.materialType.reflective, new Vector3(0.3f, 0.75f, 1), 0.8f), true));
-            Primitives.Add(new Plane(new Vector3(0, 1, 0), -5, new Material(Material.materialType.diffuse, new Vector3(0.95f, 0.95f, 0.95f)), false));
-            Primitives.Add(new Plane(new Vector3(0, 0, -1), 12, new Material(Material.materialType.diffuse, new Vector3(1, 1, 0.7f)), false));
-            Primitives.Add(new Plane(new Vector3(-1, 0, 0), 6, new Material(Material.materialType.diffuse, new Vector3(1, 1, 0.7f)), false));
-            lights.Add(new Light(new Vector3(-1, 2, -1), new Vector3(20, 20, 20)));
+                        new Vector3(1, 0.1f, 0.1f), 0.6f))); // color and reflectiveness of the material
+            Primitives.Add(
+                new Sphere(
+                    new Vector3(0.2f, -0.7f, 2.5f), 0.55f,
+                    new Material(
+                        Material.materialType.reflective, 
+                        new Vector3(0.1f, 1, 0.1f), 0.6f)));
+            Primitives.Add(
+                new Sphere(new Vector3(-0.3f, 0.15f, 4), 0.8f,
+                new Material(
+                    Material.materialType.reflective, 
+                    new Vector3(0.1f, 0.1f, 1), 0.6f)));
+            Primitives.Add(
+                new CheckeredPlane(
+                    new Vector3(0, 1, 0), 2, // normal to the plane; d = -N.P (P a point in the plane)
+                    new Material( // material of the plane
+                        Material.materialType.reflective, // type of the material
+                        new Vector3(), 0.5f))); // color and reflectiveness of the material (color is irrelevant for CheckeredPlane)
+            Primitives.Add(
+                new Plane(
+                    new Vector3(0, 1, 0), -5,
+                    new Material(
+                        Material.materialType.diffuse, 
+                        new Vector3(0.95f, 0.95f, 0.95f)))); // color of the material
+            Primitives.Add(
+                new Plane(
+                    new Vector3(0, 0, -1), 12, 
+                    new Material(
+                        Material.materialType.diffuse, 
+                        new Vector3(1, 1, 0.7f))));
+            Primitives.Add(
+                new Plane(
+                    new Vector3(-1, 0, 0), 6, 
+                    new Material(Material.materialType.diffuse, 
+                    new Vector3(1, 1, 0.7f))));
+            lights.Add(new Light(new Vector3(-1, 2, -1), new Vector3(10, 10, 10))); // position and color of the light
             lights.Add(new Light(new Vector3(1, 6, 3), new Vector3(10, 10, 10)));
             lights.Add(new Light(new Vector3(2, 3, -4), new Vector3(2, 2, 10)));
-            lights.Add(new Light(new Vector3(0, 1, 0), new Vector3(25, 25, 25)));
+            lights.Add(new Light(new Vector3(0, 1, 0), new Vector3(15, 15, 15)));
         }
 
-        ///<summary>
-        ///Method that returns closest distance to an intersection with a primitive.
-        ///</summary>
-        /// <param name="ray">a ray that gets shot and maybe intersects a primitive</param>
-        /// <returns></returns>
+        // Method that returns closest distance to an intersection with a primitive
         public Intersection Intersect(Ray ray)
         {
             Intersection intersect = null;
@@ -53,80 +74,96 @@ namespace Template
             return intersect;
         }
 
-        public Vector3 LightTransport(Ray ray, Intersection intersection, Debug debug, int raynumber) // returns the color of a pixel
+        // Method that traces a ray
+        public Vector3 Trace(Ray ray, Intersection intersection, Debug debug, int raynumber)
         {
-
             // if the ray finds does not intersect any primitive, return black
             if (intersection == null)
                 return new Vector3(0, 0, 0);
 
-            // if the ray intersects a reflective material, we start tracing the reflected ray (recursively)
-            if (intersection.prim.material.type == (int)Material.materialType.reflective && recursionDepth < maxRecursionDepth)
+            // if the ray intersects a (partially) reflective material, we start tracing the reflected ray (recursively)
+            if (intersection.Type == (int)Material.materialType.reflective && recursionDepth < maxRecursionDepth)
             {
                 recursionDepth++;
-                Vector3 R = ray.D - 2 * intersection.norm * Vector3.Dot(ray.D, intersection.norm);
-                Ray newray = new Ray(intersection.point + eps * R, R, 1E30f);
-
-                Intersection newIntersection = Intersect(newray);
-
-                raynumber++;
-                if(newIntersection != null && newIntersection.prim is Sphere)
-                  if(raynumber >= 3 )
-                    {
-                        debug.DrawRay(intersection.point, newIntersection.point, raynumber);
-                    }
-               
-
-                if (!intersection.prim.checkerboard)
-                    return intersection.prim.material.color * (1 - intersection.prim.material.reflectiveness) +
-                        (intersection.prim.material.reflectiveness) * LightTransport(newray, newIntersection, debug, raynumber);
-                else return (((int)(2 * intersection.point.X) + (int)intersection.point.Z) & 1) * (1 - intersection.prim.material.reflectiveness) * Vector3.One +
-                        (intersection.prim.material.reflectiveness) * LightTransport(newray, newIntersection, debug, raynumber);
-                // does not work for checkered plane
-                // for a simple other plane, there is reflection, but the planes appear transparent...
-
+                return Reflection(ray, intersection);
             }
 
-            // if the ray intersects a diffuse material, we start tracing shadow rays to all the light sources
+            // if the ray intersects a diffuse material, we directly calculate the light transport from all the light sources to the intersection point
             recursionDepth = 0;
+            return TotalLight(intersection);
+        }
+
+        public Vector3 Reflection(Ray ray, Intersection intersection) // if a ray gets reflected
+        {
+            Vector3 R = ray.D - 2 * intersection.norm * Vector3.Dot(ray.D, intersection.norm); // the direction of the reflected ray
+            Ray newray = new Ray(intersection.point + eps * R, R, 1E30f); // the reflected ray
+
+
+            Intersection newIntersection = Intersect(newray);
+
+            raynumber++;
+            if (newIntersection != null && newIntersection.prim is Sphere)
+                if (raynumber >= 3)
+                {
+                    debug.DrawRay(intersection.point, newIntersection.point, raynumber);
+                }
+
+            float reflectiveness = intersection.Reflectiveness;
+
+            if (intersection.prim is CheckeredPlane)
+            {
+                CheckeredPlane checkplane = (CheckeredPlane)intersection.prim;
+                Vector3 checkeredColor = checkplane.GetPixelColor(intersection.point);
+                return (1 - reflectiveness) * checkeredColor + reflectiveness * Trace(newray, newIntersection);
+            }
+            else
+                return (1 - reflectiveness) * intersection.Color + reflectiveness * Trace(newray, newIntersection);
+        }
+
+        public Vector3 TotalLight(Intersection intersection) // the total light on a point
+        {
             Vector3 totalLight = new Vector3(0, 0, 0);
             foreach (Light light in lights)
             {
                 Vector3 L = light.position - intersection.point;
                 float dist = L.Length;
-                if (Vector3.Dot(intersection.norm, L) > 0)
+                L = Vector3.Normalize(L);
+                float dotpr = Vector3.Dot(intersection.norm, L);
+                if (dotpr > 0)
                 {
-                    L = Vector3.Normalize(L);
-                }
-                float tmax = dist - 2 * eps; // distance from intersection point to light, with correction for offset
-                Ray shadowray = new Ray(intersection.point + eps * L, L, tmax);
-                Intersection occluder = Intersect(shadowray);
-                if (occluder != null) //shadowray intersects, go to next lightsource
-                {
-                    continue;
-                }
-                else //shadowray doesn't intersect. Add light value for this.
-                {
-                    float dotpr = Vector3.Dot(intersection.norm, L);
-                    if (dotpr > 0)
-                        if (!intersection.prim.checkerboard)
-                            totalLight += light.color * dotpr * (1 / (dist * dist)) * intersection.prim.material.color;
-                        else
-                            totalLight += light.color * dotpr * (1 / (dist * dist)) * (((int)(2 * intersection.point.X) + (int)intersection.point.Z) & 1);
+                    bool occluded = occlusion(L, dist, intersection);
+                    if (occluded) continue;
+                    else totalLight = LightTransport(L, dist, intersection, light.color, totalLight);
                 }
             }
-            if (totalLight.X > 1)
-                totalLight.X = 1;
-            if (totalLight.Y > 1)
-                totalLight.Y = 1;
-            if (totalLight.Z > 1)
-                totalLight.Z = 1;
+            if (totalLight.X > 1) totalLight.X = 1;
+            if (totalLight.Y > 1) totalLight.Y = 1;
+            if (totalLight.Z > 1) totalLight.Z = 1;
             return totalLight;
         }
 
-        void DebugReflRay(Intersection intersection, Intersection newIntersection, int raynumber)
+        public bool occlusion(Vector3 L, float dist, Intersection intersection) // checks if an intersection point is occluded from a light source by shooting a shadow ray
         {
+            float tmax = dist - 2 * eps; // distance from intersection point to light, with correction for offset
+            Ray shadowray = new Ray(intersection.point + eps * L, L, tmax);
+            Intersection occluder = Intersect(shadowray);
+            if (occluder != null) return true;
+            else return false;
+        }
 
+        public Vector3 LightTransport(Vector3 L, float dist, Intersection intersection, Vector3 lightColor, Vector3 totalLight) // the light transport from all the light sources illuminating a point
+        {
+            float dotpr = Vector3.Dot(intersection.norm, L);
+            if (dotpr > 0)
+                if (intersection.prim is CheckeredPlane)
+                {
+                    CheckeredPlane checkplane = (CheckeredPlane)intersection.prim;
+                    Vector3 checkeredColor = checkplane.GetPixelColor(intersection.point);
+                    totalLight += lightColor * dotpr * (1 / (dist * dist)) * checkeredColor;
+                }
+                else
+                    totalLight += lightColor * dotpr * (1 / (dist * dist)) * intersection.Color;
+            return totalLight;
         }
 
         public List<Primitive> Primitives
