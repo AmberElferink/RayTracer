@@ -75,7 +75,7 @@ namespace Template
         }
 
         // Method that traces a ray
-        public Vector3 Trace(Ray ray, Intersection intersection)
+        public Vector3 Trace(Ray ray, Intersection intersection, Debug debug, int raynumber)
         {
             // if the ray finds does not intersect any primitive, return black
             if (intersection == null)
@@ -97,16 +97,27 @@ namespace Template
         {
             Vector3 R = ray.D - 2 * intersection.norm * Vector3.Dot(ray.D, intersection.norm); // the direction of the reflected ray
             Ray newray = new Ray(intersection.point + eps * R, R, 1E30f); // the reflected ray
+
+
+            Intersection newIntersection = Intersect(newray);
+
+            raynumber++;
+            if (newIntersection != null && newIntersection.prim is Sphere)
+                if (raynumber >= 3)
+                {
+                    debug.DrawRay(intersection.point, newIntersection.point, raynumber);
+                }
+
             float reflectiveness = intersection.Reflectiveness;
 
             if (intersection.prim is CheckeredPlane)
             {
                 CheckeredPlane checkplane = (CheckeredPlane)intersection.prim;
                 Vector3 checkeredColor = checkplane.GetPixelColor(intersection.point);
-                return (1 - reflectiveness) * checkeredColor + reflectiveness * Trace(newray, Intersect(newray));
+                return (1 - reflectiveness) * checkeredColor + reflectiveness * Trace(newray, newIntersection);
             }
             else
-                return (1 - reflectiveness) * intersection.Color + reflectiveness * Trace(newray, Intersect(newray));
+                return (1 - reflectiveness) * intersection.Color + reflectiveness * Trace(newray, newIntersection);
         }
 
         public Vector3 TotalLight(Intersection intersection) // the total light on a point

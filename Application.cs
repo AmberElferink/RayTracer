@@ -2,6 +2,7 @@
 using System.IO;
 using OpenTK;
 using System.Diagnostics;
+using OpenTK.Input;
 
 namespace Template {
 
@@ -27,6 +28,21 @@ namespace Template {
             long curMs = stopwatch.ElapsedMilliseconds;
             Console.WriteLine(curMs - prevMs + " ms/frame");
             prevMs = curMs;
+        }
+
+        public void CameraAction(Key key)
+        {
+            if (key == Key.Down)
+            {
+                Console.WriteLine(raytracer.camera.E);
+                if(raytracer.camera.E.Z <= 0.8)
+                raytracer.camera.E.Z += 0.1f;
+            }
+            if (key == Key.Up)
+            {
+                raytracer.camera.E.Z -= 0.1f;
+            }
+
         }
     } 
 } 
