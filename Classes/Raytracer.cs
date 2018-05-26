@@ -39,25 +39,29 @@ namespace Template
                     Intersection intersection = scene.Intersect(ray);
                     screen.pixels[x + y * screen.width] = CreateColor(scene.Trace(ray, intersection, debug, raynumber));
                     
-                    //Debug output
-                    if (y == screen.height / 2)
+                    if(intersection!= null)
                     {
-                        
-                        raycounter++;
-                        if(raycounter >= 15)
+                        //Debug output
+                        if (y == screen.height / 2)
                         {
-                            if (intersection.prim is Sphere)
-                            {
-                                    debug.DrawRay(camera.E, intersection.point, raynumber);
-                            }
-                            else
-                            {
-                                debug.DrawRay(camera.E, ray.D * ray.t, raynumber);
-                            }
-                            raycounter = 0;
-                        }
 
+                            raycounter++;
+                            if (raycounter >= 15)
+                            {
+                                if (intersection.prim is Sphere)
+                                {
+                                    debug.DrawRay(camera.E, intersection.point, raynumber);
+                                }
+                                else
+                                {
+                                    debug.DrawRay(camera.E, ray.D * ray.t, raynumber);
+                                }
+                                raycounter = 0;
+                            }
+
+                        }
                     }
+                    
 
                 }
             }

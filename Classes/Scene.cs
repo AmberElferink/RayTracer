@@ -25,16 +25,23 @@ namespace Template
                 new Sphere(
                     new Vector3(0.2f, -0.7f, 2.5f), 0.55f,
                     new Material(
-                        Material.materialType.reflective, 
+                        Material.materialType.reflective,
                         new Vector3(0.1f, 1, 0.1f), 0.6f)));
             Primitives.Add(
                 new Sphere(new Vector3(-0.3f, 0.15f, 4), 0.8f,
                 new Material(
-                    Material.materialType.reflective, 
+                    Material.materialType.reflective,
                     new Vector3(0.1f, 0.1f, 1), 0.6f)));
             Primitives.Add(
+                new Triangle(
+                    new Vector3(0.3f, -0.7f, 2.5f),
+                    new Vector3(0.5f, -0.9f, 3f),
+                    new Vector3(0.2f, -0, 3),
+                    new Material(Material.materialType.diffuse,
+                    new Vector3(1, 1, 1))));
+            Primitives.Add(
                 new CheckeredPlane(
-                    new Vector3(0, 1, 0), 2, // normal to the plane; d = -N.P (P a point in the plane)
+                    new Vector3(0, 1, 0), 2, // normal to the plane; d = -N DOT P (P a point in the plane)
                     new Material( // material of the plane
                         Material.materialType.reflective, // type of the material
                         new Vector3(), 0.5f))); // color and reflectiveness of the material (color is irrelevant for CheckeredPlane)
@@ -42,18 +49,18 @@ namespace Template
                 new Plane(
                     new Vector3(0, 1, 0), -5,
                     new Material(
-                        Material.materialType.diffuse, 
+                        Material.materialType.diffuse,
                         new Vector3(0.95f, 0.95f, 0.95f)))); // color of the material
             Primitives.Add(
                 new Plane(
-                    new Vector3(0, 0, -1), 12, 
+                    new Vector3(0, 0, -1), 12,
                     new Material(
-                        Material.materialType.diffuse, 
+                        Material.materialType.diffuse,
                         new Vector3(1, 1, 0.7f))));
             Primitives.Add(
                 new Plane(
-                    new Vector3(-1, 0, 0), 6, 
-                    new Material(Material.materialType.diffuse, 
+                    new Vector3(-1, 0, 0), 6,
+                    new Material(Material.materialType.diffuse,
                     new Vector3(1, 1, 0.7f))));
             lights.Add(new Light(new Vector3(-1, 2, -1), new Vector3(10, 10, 10))); // position and color of the light
             lights.Add(new Light(new Vector3(1, 6, 3), new Vector3(10, 10, 10)));
@@ -131,7 +138,7 @@ namespace Template
                 float dotpr = Vector3.Dot(intersection.norm, L);
                 if (dotpr > 0)
                 {
-                    bool occluded = occlusion(L, dist, intersection);
+                    bool occluded = Occlusion(L, dist, intersection);
                     if (occluded) continue;
                     else totalLight = LightTransport(L, dist, intersection, light.color, totalLight);
                 }
@@ -142,7 +149,7 @@ namespace Template
             return totalLight;
         }
 
-        public bool occlusion(Vector3 L, float dist, Intersection intersection) // checks if an intersection point is occluded from a light source by shooting a shadow ray
+        public bool Occlusion(Vector3 L, float dist, Intersection intersection) // checks if an intersection point is occluded from a light source by shooting a shadow ray
         {
             float tmax = dist - 2 * eps; // distance from intersection point to light, with correction for offset
             Ray shadowray = new Ray(intersection.point + eps * L, L, tmax);
