@@ -45,6 +45,16 @@ namespace Template {
             {
                 raytracer.camera.E.Z += 0.1f;
             }
+            if(key == Key.Left)
+            {
+                raytracer.camera.E.X -= 0.1f;
+                raytracer.camera.T.X -= 0.1f;
+            }
+            if(key == Key.Right)
+            {
+                raytracer.camera.E.X += 0.1f;
+                raytracer.camera.T.X += 0.1f;
+            }
             raytracer.camera.InitNewCameraDirection();
         }
         public void CameraActionMouse(int mouseX, int mouseY)
