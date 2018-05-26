@@ -4,6 +4,7 @@ using OpenTK;
 using System.Diagnostics;
 using OpenTK.Input;
 
+
 namespace Template {
 
     class Application
@@ -12,7 +13,7 @@ namespace Template {
         Raytracer raytracer;
         Stopwatch stopwatch;
         long prevMs = 0;
-        int mouseDeadZone = 5;
+        int mouseDeadZone = 40;
 
 
         // initialize
@@ -57,6 +58,15 @@ namespace Template {
             {
                 raytracer.camera.T.X += 0.01f;
                 raytracer.camera.InitNewCameraDirection();
+            }
+
+            if(mouseY > screen.height/2 - mouseDeadZone)
+            {
+                raytracer.camera.T.Y -= 0.01f;
+            }
+            else if (mouseY < screen.height/2 - mouseDeadZone)
+            {
+                raytracer.camera.T.Y += 0.01f;
             }
         }
     } 
