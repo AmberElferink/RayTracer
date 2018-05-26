@@ -85,7 +85,7 @@ namespace Template
             if (intersection.Type == (int)Material.materialType.reflective && recursionDepth < maxRecursionDepth)
             {
                 recursionDepth++;
-                return Reflection(ray, intersection);
+                return Reflection(ray, intersection, debug, raynumber);
             }
 
             // if the ray intersects a diffuse material, we directly calculate the light transport from all the light sources to the intersection point
@@ -93,7 +93,7 @@ namespace Template
             return TotalLight(intersection);
         }
 
-        public Vector3 Reflection(Ray ray, Intersection intersection) // if a ray gets reflected
+        public Vector3 Reflection(Ray ray, Intersection intersection, Debug debug, int raynumber) // if a ray gets reflected
         {
             Vector3 R = ray.D - 2 * intersection.norm * Vector3.Dot(ray.D, intersection.norm); // the direction of the reflected ray
             Ray newray = new Ray(intersection.point + eps * R, R, 1E30f); // the reflected ray
@@ -114,10 +114,10 @@ namespace Template
             {
                 CheckeredPlane checkplane = (CheckeredPlane)intersection.prim;
                 Vector3 checkeredColor = checkplane.GetPixelColor(intersection.point);
-                return (1 - reflectiveness) * checkeredColor + reflectiveness * Trace(newray, newIntersection);
+                return (1 - reflectiveness) * checkeredColor + reflectiveness * Trace(newray, newIntersection, debug, raynumber);
             }
             else
-                return (1 - reflectiveness) * intersection.Color + reflectiveness * Trace(newray, newIntersection);
+                return (1 - reflectiveness) * intersection.Color + reflectiveness * Trace(newray, newIntersection, debug, raynumber);
         }
 
         public Vector3 TotalLight(Intersection intersection) // the total light on a point
