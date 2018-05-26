@@ -17,8 +17,14 @@ namespace Template
         protected override void OnKeyDown(KeyboardKeyEventArgs e)
         {
             base.OnKeyDown(e);
-            Console.WriteLine(e.Key);
-                application.CameraAction(e.Key);
+                application.CameraActionKey(e.Key);
+        }
+
+        protected override void OnMouseMove(MouseMoveEventArgs e)
+        {
+            base.OnMouseMove(e);
+            application.CameraActionMouse(e.Mouse.X, e.Mouse.Y);
+            
         }
 
         protected override void OnLoad( EventArgs e )

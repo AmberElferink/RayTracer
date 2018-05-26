@@ -15,12 +15,19 @@ public class Camera
     public Vector3 p0; // upper left corner of screen
     public Vector3 p1; // upper right corner of screen
     public Vector3 p2; // bottom left corner of screen
+    public Vector3 T;
 
     public Camera(Vector3 E, Vector3 T, double a)
     {
         this.E = E;
-        V = Vector3.Normalize(T - E); // T = target
+        this.T = T;
         this.a = a * Math.PI / 180; // input a must be in degrees; it is then converted to radians
+        InitNewCameraDirection();
+    }
+
+    public void InitNewCameraDirection()
+    {
+        V = Vector3.Normalize(T - E); // T = target
         float w = (float)(2 * Math.Tan(this.a / 2)); // width of screen
         float h = w; // height of screen
         C = E + V;

@@ -12,6 +12,8 @@ namespace Template {
         Raytracer raytracer;
         Stopwatch stopwatch;
         long prevMs = 0;
+        int mouseDeadZone = 5;
+
 
         // initialize
         public void Init()
@@ -30,19 +32,32 @@ namespace Template {
             prevMs = curMs;
         }
 
-        public void CameraAction(Key key)
+        public void CameraActionKey(Key key)
         {
             if (key == Key.Down)
             {
                 Console.WriteLine(raytracer.camera.E);
                 if(raytracer.camera.E.Z <= 0.8)
-                raytracer.camera.E.Z += 0.1f;
+                raytracer.camera.E.Z -= 0.1f;
             }
             if (key == Key.Up)
             {
-                raytracer.camera.E.Z -= 0.1f;
+                raytracer.camera.E.Z += 0.1f;
             }
-
+            raytracer.camera.InitNewCameraDirection();
+        }
+        public void CameraActionMouse(int mouseX, int mouseY)
+        {
+            if (mouseX < screen.width/4 - mouseDeadZone)
+            {
+                raytracer.camera.T.X -= 0.01f;
+                raytracer.camera.InitNewCameraDirection();
+            }
+            else if (mouseX > screen.width/ - mouseDeadZone)
+            {
+                raytracer.camera.T.X += 0.01f;
+                raytracer.camera.InitNewCameraDirection();
+            }
         }
     } 
 } 
