@@ -13,7 +13,15 @@ namespace Template
         static int screenID;
 		static Application application;
 		static bool terminated = false;
-		protected override void OnLoad( EventArgs e )
+
+        protected override void OnKeyDown(KeyboardKeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            Console.WriteLine(e.Key);
+                application.CameraAction(e.Key);
+        }
+
+        protected override void OnLoad( EventArgs e )
 		{
 			// called upon app init
 			GL.ClearColor( Color.Black );

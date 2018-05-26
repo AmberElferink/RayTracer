@@ -1,5 +1,6 @@
 ﻿using OpenTK;
 using System;
+using OpenTK.Input;
 
 namespace Template
 {
@@ -69,6 +70,8 @@ namespace Template
             int b = (int)(Math.Min(1, color.Z) * 255);
             return (r << 16) + (g << 8) + b;
         }
+
+
 
     } //class raytracer
 } //namespace template
