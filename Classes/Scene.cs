@@ -34,11 +34,11 @@ namespace Template
                     new Vector3(0.1f, 0.1f, 1), 0.6f)));
             Primitives.Add(
                 new Triangle(
-                    new Vector3(0.3f, -0.7f, 2.5f),
-                    new Vector3(0.5f, -0.9f, 3f),
-                    new Vector3(0.2f, -0, 3),
+                    new Vector3(-1f, 0.7f, 1f),
+                    new Vector3(0.3f, 0.7f, 2.5f),
+                    new Vector3(0.2f, -0.1f, 3),
                     new Material(Material.materialType.diffuse,
-                    new Vector3(1, 1, 1))));
+                    new Vector3(0.1f, 0.9f, 0.1f))));
             Primitives.Add(
                 new CheckeredPlane(
                     new Vector3(0, 1, 0), 2, // normal to the plane; d = -N DOT P (P a point in the plane)
@@ -109,7 +109,7 @@ namespace Template
             Intersection newIntersection = Intersect(newray);
 
             raynumber++;
-            if (newIntersection != null && newIntersection.prim is Sphere)
+            if (newIntersection != null && (newIntersection.prim is Sphere || newIntersection.prim is Triangle))
                 if (raynumber >= 3)
                 {
                     debug.DrawRay(intersection.point, newIntersection.point, raynumber);

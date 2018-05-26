@@ -48,7 +48,7 @@ namespace Template
                             raycounter++;
                             if (raycounter >= 15)
                             {
-                                if (intersection.prim is Sphere)
+                                if (intersection.prim is Sphere || intersection.prim is Triangle)
                                 {
                                     debug.DrawRay(camera.E, intersection.point, raynumber);
                                 }

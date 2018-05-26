@@ -9,7 +9,7 @@ using OpenTK.Graphics.OpenGL;
 public abstract class Primitive
 {
     public Material material; // primitive can be made of diffuse or reflective material
-    public abstract Intersection Intersect(Ray ray);
+    public abstract Intersection Intersect(Ray ray); 
     // Method that calculates distance from ray to primitive, and updates ray.t if this distance is shorter than the actual value of ray.t.
 }
 
@@ -111,7 +111,7 @@ public class Triangle : Primitive
     float d;
     Vector3 N;
 
-    public Triangle(Vector3 V1, Vector3 V2, Vector3 V3, Material material)
+    public Triangle (Vector3 V1, Vector3 V2, Vector3 V3, Material material)
     {
         this.material = material;
 
@@ -127,7 +127,7 @@ public class Triangle : Primitive
         N = Vector3.Cross(u, v);
         N.Normalize();
 
-
+      
 
     }
 
@@ -138,11 +138,10 @@ public class Triangle : Primitive
         float t = -(Vector3.Dot(ray.O, this.N) + d) / (Vector3.Dot(ray.D, this.N));
         if ((t < ray.t) && (t > 0))
         {
-            ray.t = t;
             Intersection intersection = new Intersection(t, ray.O + t * ray.D, this.N, this);
-
             if (IntersectIsInTriangle(intersection))
             {
+                ray.t = t;
                 return intersection;
             }
         }
@@ -161,10 +160,10 @@ public class Triangle : Primitive
         float denom = dot1 * dot1 - dot2 * dot3;
 
         float s = (dot1 * dot4 - dot3 * dot5) / denom;
-        if (s >= 0)
+        if(s >= 0)
         {
             float t = (dot1 * dot5 - dot2 * dot4) / denom;
-            if (t >= 0)
+            if(t >= 0)
             {
                 if (s + t <= 1)
                     return true;
@@ -173,5 +172,5 @@ public class Triangle : Primitive
         return false;
     }
 
-
+    
 }
