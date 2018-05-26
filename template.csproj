@@ -66,6 +66,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Debug.cs" />
+    <Compile Include="Classes\Material.cs" />
     <Compile Include="Classes\Raytracer.cs" />
     <Compile Include="Classes\Camera.cs" />
     <Compile Include="Classes\Intersection.cs" />

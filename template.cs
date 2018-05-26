@@ -13,14 +13,22 @@ namespace Template
         static int screenID;
 		static Application application;
 		static bool terminated = false;
-		protected override void OnLoad( EventArgs e )
+
+        protected override void OnKeyDown(KeyboardKeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            Console.WriteLine(e.Key);
+                application.CameraAction(e.Key);
+        }
+
+        protected override void OnLoad( EventArgs e )
 		{
 			// called upon app init
 			GL.ClearColor( Color.Black );
 			GL.Enable( EnableCap.Texture2D );
 			GL.Disable( EnableCap.DepthTest );
 			GL.Hint( HintTarget.PerspectiveCorrectionHint, HintMode.Nicest );
-			ClientSize = new Size( 640, 640 );
+			ClientSize = new Size( 1024, 512 );
 			application = new Application();
 			application.screen = new Surface( Width, Height );
 			Sprite.target = application.screen;

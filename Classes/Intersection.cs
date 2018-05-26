@@ -7,7 +7,7 @@ using OpenTK;
 
 public class Intersection
 {
-    public float t; // shortest intersection distance
+    public float t; // intersection distance
     public Vector3 point; // intersection point
     public Vector3 norm; // normal at intersection point
     public Primitive prim; // nearest primitive
@@ -18,6 +18,21 @@ public class Intersection
         this.point = point;
         this.norm = norm;
         this.prim = prim;
+    }
+
+    public Vector3 Color
+    {
+        get { return prim.material.color; }
+    }
+
+    public float Reflectiveness
+    {
+        get { return prim.material.reflectiveness; }
+    }
+
+    public int Type
+    {
+        get { return prim.material.type; }
     }
 }
 

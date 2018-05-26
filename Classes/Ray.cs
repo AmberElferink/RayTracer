@@ -14,7 +14,7 @@ public class Ray
     public Ray(Vector3 O, Vector3 D, float t)
     {
         this.O = O;
-        this.D = Vector3.Normalize(D);
+        this.D = D;
         this.t = t;
     }
 }

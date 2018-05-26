@@ -8,14 +8,9 @@ using OpenTK.Graphics.OpenGL;
 
 public abstract class Primitive
 {
-    public Vector3 color = new Vector3(1, 0.1f, 0.1f); // later: in material implementatie
-
-    ///<summary>
-    ///Method that calculates distance from ray to primitive, and updates ray.t if this distance is shorter than the actual value of ray.t.
-    ///</summary>
-    /// <param name="ray">a ray that gets shot and maybe intersects a primitive</param>
-    /// <returns></returns>
-    public abstract Intersection Intersect(Ray ray);
+    public Material material; // primitive can be made of diffuse or reflective material
+    public abstract Intersection Intersect(Ray ray); 
+    // Method that calculates distance from ray to primitive, and updates ray.t if this distance is shorter than the actual value of ray.t.
 }
 
 public class Plane : Primitive
@@ -23,10 +18,11 @@ public class Plane : Primitive
     public Vector3 N; // normal of plane
     public float d; // equation p.N + d = 0 for a point p on the plane
 
-    public Plane(Vector3 N, float d)
+    public Plane(Vector3 N, float d, Material material)
     {
-        this.N = N;
+        this.N = Vector3.Normalize(N);
         this.d = d;
+        this.material = material;
     }
 
     public override Intersection Intersect(Ray ray)
@@ -35,9 +31,24 @@ public class Plane : Primitive
         if ((t < ray.t) && (t > 0))
         {
             ray.t = t;
-            return new Intersection(t, ray.O + t * ray.D, N, this);
+            return new Intersection(t, ray.O + t * ray.D, this.N, this);
         }
         else return null;
+    }
+}
+
+public class CheckeredPlane : Plane
+{
+    public CheckeredPlane(Vector3 N, float d, Material material) : base(N, d, material)
+    {
+        this.N = Vector3.Normalize(N);
+        this.d = d;
+        this.material = material;
+    }
+
+    public Vector3 GetPixelColor(Vector3 Point)
+    {
+        return (((int)(Math.Floor((2 * Point.X)) + Math.Floor(Point.Z))) & 1) * Vector3.One;
     }
 }
 
@@ -46,12 +57,15 @@ public class Sphere : Primitive
     public Vector3 center; // center of sphere
     public float r; // radius of sphere
     public float r2; // radius squared
+    public float divr; // 1/r
 
-    public Sphere(Vector3 center, float r)
+    public Sphere(Vector3 center, float r, Material material)
     {
         this.center = center;
         this.r = r;
         this.r2 = r * r;
+        this.divr = 1 / r;
+        this.material = material;
     }
 
     public override Intersection Intersect(Ray ray)
@@ -66,7 +80,7 @@ public class Sphere : Primitive
         {
             ray.t = t;
             Vector3 P = ray.O + t * ray.D; // intersection point of ray with sphere
-            return new Intersection(t, P, (P - this.center) / this.r, this);
+            return new Intersection(t, P, (P - this.center) * divr, this);
         }
         else return null;
     }
