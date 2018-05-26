@@ -1,5 +1,6 @@
 ﻿using OpenTK;
 using System;
+using OpenTK.Input;
 
 namespace Template
 {
@@ -23,6 +24,8 @@ namespace Template
         }
         public void Render()
         {
+
+            screen.Clear(0);
             debug.Render();
 
             for (int y = 0; y < screen.height; y++)
@@ -31,20 +34,31 @@ namespace Template
                 {
                     Vector3 D = (float)x / (float)RscreenWidth* (camera.p1 - camera.p0) + (float)y / (float)screen.height * (camera.p2 - camera.p0) + camera.p0 - camera.E;
                     D.Normalize();
+                    int raynumber = 0;
                     Ray ray = new Ray(camera.E, D, 1E30f);
                     Intersection intersection = scene.Intersect(ray);
-                    screen.pixels[x + y * screen.width] = CreateColor(scene.Trace(ray, intersection));
+                    screen.pixels[x + y * screen.width] = CreateColor(scene.Trace(ray, intersection, debug, raynumber));
                     
                     //Debug output
-                    if (y == screen.height / 2 && intersection.prim is Sphere)
+                    if (y == screen.height / 2)
                     {
+                        
                         raycounter++;
-                        if (raycounter >= 10)
+                        if(raycounter >= 15)
                         {
-                            debug.DrawRay(camera.E, intersection.point);
+                            if (intersection.prim is Sphere)
+                            {
+                                    debug.DrawRay(camera.E, intersection.point, raynumber);
+                            }
+                            else
+                            {
+                                debug.DrawRay(camera.E, ray.D * ray.t, raynumber);
+                            }
                             raycounter = 0;
                         }
+
                     }
+
                 }
             }
         }

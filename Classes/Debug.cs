@@ -56,9 +56,23 @@ namespace Template
             }
         }
 
-        public void DrawRay(Vector3 start, Vector3 end)
+        public void DrawRay(Vector3 start, Vector3 end, int raynumber)
         {
-            screen.Line((int)(offsetX + translateX + start.X * scale), (int)(translateY + start.Z * -scale), (int)(translateX + offsetX + end.X * scale), (int)(translateY + end.Z * -scale), CreateColor(new Vector3(1, 1, 0)));
+            //primary ray
+            int color = CreateColor(new Vector3(1, 1, 0));
+            if (raynumber == 2) 
+            {
+                color = CreateColor(new Vector3(0, 1, 1));
+            }
+            else if(raynumber == 3)
+            {
+                color = CreateColor(new Vector3(1, 0, 0));
+            }
+            else if(raynumber >= 4)
+            {
+                color = CreateColor(new Vector3(0, 0, 1));
+            }
+            screen.Line((int)(offsetX + translateX + start.X * scale), (int)(translateY + start.Z * -scale), (int)(translateX + offsetX + end.X * scale), (int)(translateY + end.Z * -scale), color);
         }
 
         int CreateColor(Vector3 color)
