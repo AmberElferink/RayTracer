@@ -34,11 +34,11 @@ namespace Template
                     new Vector3(0.1f, 0.1f, 1), 0.6f)));
             Primitives.Add(
                 new Triangle(
-                    new Vector3(-1f, 0.7f, 1f),
-                    new Vector3(0.3f, 0.7f, 2.5f),
-                    new Vector3(0.2f, -0.1f, 3),
-                    new Material(Material.materialType.diffuse,
-                    new Vector3(0.1f, 0.9f, 0.1f))));
+                    new Vector3(-0.3f, 0.95f, 1.6f), //bottom left
+                    new Vector3(1.5f, 1.5f, 5.4f), //bottom right
+                    new Vector3(-0.7f, 5.3f, 4), //top
+                    new Material(Material.materialType.reflective,
+                    new Vector3(1f, 1f, 1f))));
             Primitives.Add(
                 new CheckeredPlane(
                     new Vector3(0, 1, 0), 2, // normal to the plane; d = -N DOT P (P a point in the plane)
