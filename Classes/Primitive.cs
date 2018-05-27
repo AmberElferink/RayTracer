@@ -126,14 +126,14 @@ public class Triangle : Primitive
 
         N = Vector3.Cross(u, v);
         N.Normalize();
+        d = -Vector3.Dot(N, V1);
 
-      
 
     }
 
     public override Intersection Intersect(Ray ray)
     {
-        d = -Vector3.Dot(N, V1);
+
         //adapted plane intersection method
         float t = -(Vector3.Dot(ray.O, this.N) + d) / (Vector3.Dot(ray.D, this.N));
         if ((t < ray.t) && (t > 0))
