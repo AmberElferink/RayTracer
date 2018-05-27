@@ -20,6 +20,7 @@ namespace Template
             camera = new Camera(new Vector3(0, 0.2f, -2.2f), new Vector3(0.3f, -0.5f, 0.8f), 40);
             scene = new Scene();
             debug = new Debug(screen, scene);
+            scene.debug = debug;
             RscreenWidth = screen.width / 2;
         }
         public void Render()
@@ -34,10 +35,9 @@ namespace Template
                 {
                     Vector3 D = (float)x / (float)RscreenWidth* (camera.p1 - camera.p0) + (float)y / (float)screen.height * (camera.p2 - camera.p0) + camera.p0 - camera.E;
                     D.Normalize();
-                    int raynumber = 0;
                     Ray ray = new Ray(camera.E, D, 1E30f);
                     Intersection intersection = scene.Intersect(ray);
-                    screen.pixels[x + y * screen.width] = CreateColor(scene.Trace(ray, intersection, debug, raynumber));
+                    screen.pixels[x + y * screen.width] = CreateColor(scene.Trace(ray, intersection));
                     
                     if(intersection!= null)
                     {
@@ -45,19 +45,16 @@ namespace Template
                         if (y == screen.height / 2)
                         {
 
-                            raycounter++;
-                            if (raycounter >= 15)
-                            {
+
                                 if (intersection.prim is Sphere || intersection.prim is Triangle)
                                 {
-                                    debug.DrawRay(camera.E, intersection.point, raynumber);
+                                    debug.DrawRay(camera.E, intersection.point, 0);
                                 }
                                 else
                                 {
-                                    debug.DrawRay(camera.E, ray.D * ray.t, raynumber);
+                                    debug.DrawRay(camera.E, ray.D * ray.t, 0);
                                 }
-                                raycounter = 0;
-                            }
+
 
                         }
                     }

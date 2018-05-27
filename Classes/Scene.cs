@@ -12,6 +12,7 @@ namespace Template
         float eps = 0.00001f;
         int recursionDepth = 0;
         int maxRecursionDepth = 10;
+        public Debug debug;
 
         public Scene()
         {
@@ -62,10 +63,11 @@ namespace Template
                     new Vector3(-1, 0, 0), 6,
                     new Material(Material.materialType.diffuse,
                     new Vector3(1, 1, 0.7f))));
-            lights.Add(new Light(new Vector3(-1, 2, -1), new Vector3(10, 10, 10))); // position and color of the light
+            /*lights.Add(new Light(new Vector3(-1, 2, -1), new Vector3(10, 10, 10))); // position and color of the light
             lights.Add(new Light(new Vector3(1, 6, 3), new Vector3(10, 10, 10)));
             lights.Add(new Light(new Vector3(2, 3, -4), new Vector3(2, 2, 10)));
-            lights.Add(new Light(new Vector3(0, 1, 0), new Vector3(15, 15, 15)));
+            lights.Add(new Light(new Vector3(0, 1, 0), new Vector3(15, 15, 15)));*/
+            lights.Add(new Spotlight(new Vector3(-1, 2, -1), new Vector3(0.2f, -0.7f, 2.5f), 30, new Vector3(100f, 20f, 20f)));
         }
 
         // Method that returns closest distance to an intersection with a primitive
@@ -82,7 +84,7 @@ namespace Template
         }
 
         // Method that traces a ray
-        public Vector3 Trace(Ray ray, Intersection intersection, Debug debug, int raynumber)
+        public Vector3 Trace(Ray ray, Intersection intersection)
         {
             // if the ray finds does not intersect any primitive, return black
             if (intersection == null)
@@ -92,7 +94,7 @@ namespace Template
             if (intersection.Type == (int)Material.materialType.reflective && recursionDepth < maxRecursionDepth)
             {
                 recursionDepth++;
-                return Reflection(ray, intersection, debug, raynumber);
+                return Reflection(ray, intersection);
             }
 
             // if the ray intersects a diffuse material, we directly calculate the light transport from all the light sources to the intersection point
@@ -100,7 +102,7 @@ namespace Template
             return TotalLight(intersection);
         }
 
-        public Vector3 Reflection(Ray ray, Intersection intersection, Debug debug, int raynumber) // if a ray gets reflected
+        public Vector3 Reflection(Ray ray, Intersection intersection) // if a ray gets reflected
         {
             Vector3 R = ray.D - 2 * intersection.norm * Vector3.Dot(ray.D, intersection.norm); // the direction of the reflected ray
             Ray newray = new Ray(intersection.point + eps * R, R, 1E30f); // the reflected ray
@@ -108,12 +110,10 @@ namespace Template
 
             Intersection newIntersection = Intersect(newray);
 
-            raynumber++;
+            
             if (newIntersection != null && (newIntersection.prim is Sphere || newIntersection.prim is Triangle))
-                if (raynumber >= 3)
-                {
-                    debug.DrawRay(intersection.point, newIntersection.point, raynumber);
-                }
+                    debug.DrawRay(intersection.point, newIntersection.point, 2);
+
 
             float reflectiveness = intersection.Reflectiveness;
 
@@ -121,10 +121,10 @@ namespace Template
             {
                 CheckeredPlane checkplane = (CheckeredPlane)intersection.prim;
                 Vector3 checkeredColor = checkplane.GetPixelColor(intersection.point);
-                return (1 - reflectiveness) * checkeredColor + reflectiveness * Trace(newray, newIntersection, debug, raynumber);
+                return (1 - reflectiveness) * checkeredColor + reflectiveness * Trace(newray, newIntersection);
             }
             else
-                return (1 - reflectiveness) * intersection.Color + reflectiveness * Trace(newray, newIntersection, debug, raynumber);
+                return (1 - reflectiveness) * intersection.Color + reflectiveness * Trace(newray, newIntersection);
         }
 
         public Vector3 TotalLight(Intersection intersection) // the total light on a point
@@ -138,7 +138,7 @@ namespace Template
                 float dotpr = Vector3.Dot(intersection.norm, L);
                 if (dotpr > 0)
                 {
-                    bool occluded = Occlusion(L, dist, intersection);
+                    bool occluded = Occlusion(L, dist, intersection, light);
                     if (occluded) continue;
                     else totalLight = LightTransport(L, dist, intersection, light.color, totalLight);
                 }
@@ -149,13 +149,23 @@ namespace Template
             return totalLight;
         }
 
-        public bool Occlusion(Vector3 L, float dist, Intersection intersection) // checks if an intersection point is occluded from a light source by shooting a shadow ray
+        public bool Occlusion(Vector3 L, float dist, Intersection intersection, Light light) // checks if an intersection point is occluded from a light source by shooting a shadow ray
         {
             float tmax = dist - 2 * eps; // distance from intersection point to light, with correction for offset
             Ray shadowray = new Ray(intersection.point + eps * L, L, tmax);
             Intersection occluder = Intersect(shadowray);
-            if (occluder != null) return true;
-            else return false;
+            if (occluder != null)
+                return true;
+            else if (light is Spotlight)
+            {
+                Spotlight light2 = (Spotlight)light;
+                float cosShadowrayLight = Vector3.Dot(light2.direction, shadowray.D) / (light2.direction.Length * shadowray.D.Length);
+                if (cosShadowrayLight > light2.maxcosangle)
+                    return true;
+            }
+            debug.DrawRay(intersection.point, light.position, 1);
+            return false;
+
         }
 
         public Vector3 LightTransport(Vector3 L, float dist, Intersection intersection, Vector3 lightColor, Vector3 totalLight) // the light transport from all the light sources illuminating a point
