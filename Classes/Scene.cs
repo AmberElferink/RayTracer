@@ -67,7 +67,7 @@ namespace Template
             lights.Add(new Light(new Vector3(1, 6, 3), new Vector3(10, 10, 10)));
             lights.Add(new Light(new Vector3(2, 3, -4), new Vector3(2, 2, 10)));
             lights.Add(new Light(new Vector3(0, 1, 0), new Vector3(15, 15, 15)));*/
-            lights.Add(new Spotlight(new Vector3(-1, 2, -1), new Vector3(0.2f, -0.7f, 2.5f), 30, new Vector3(100f, 20f, 20f)));
+            lights.Add(new Spotlight(new Vector3(-1, 2, -1), new Vector3(0.2f, -0.7f, 2.5f), 30, new Vector3(100f, 80f, 20f)));
         }
 
         // Method that returns closest distance to an intersection with a primitive
