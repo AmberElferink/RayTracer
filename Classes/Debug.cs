@@ -22,7 +22,6 @@ namespace Template
             offsetX = DscreenWidth;
             translateX = DscreenWidth / 2;
             translateY = DscreenWidth / 2;
-
         }
 
         public void Render()
@@ -34,7 +33,6 @@ namespace Template
         {
             int x;
             int y;
-
 
             foreach (Primitive primitive in scene.Primitives)
             {
@@ -60,6 +58,7 @@ namespace Template
         {
             //primary ray
             int color = CreateColor(new Vector3(1, 1, 0));
+            //secondary rays
             if (raynumber == 2) 
             {
                 color = CreateColor(new Vector3(0, 1, 1));

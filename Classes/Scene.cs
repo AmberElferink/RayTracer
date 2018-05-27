@@ -19,8 +19,8 @@ namespace Template
                 new Sphere(
                     new Vector3(1.5f, 0, 4), 0.9f, // center and radius of the sphere
                     new Material( // material of the sphere
-                        Material.materialType.reflective, // type of the material
-                        new Vector3(1, 0.1f, 0.1f), 0.6f))); // color and reflectiveness of the material
+                        Material.materialType.dielectric, // type of the material
+                        new Vector3(1, 0.1f, 0.1f), 0.6f, 1.5f))); // color, reflectiveness and index of refraction of the material
             Primitives.Add(
                 new Sphere(
                     new Vector3(0.2f, -0.7f, 2.5f), 0.55f,
@@ -42,19 +42,19 @@ namespace Template
                 new Plane(
                     new Vector3(0, 1, 0), -5,
                     new Material(
-                        Material.materialType.diffuse, 
-                        new Vector3(0.95f, 0.95f, 0.95f)))); // color of the material
+                        Material.materialType.diffuse,
+                        new Vector3(0.95f, 0.95f, 0.95f), 0)));
             Primitives.Add(
                 new Plane(
-                    new Vector3(0, 0, -1), 12, 
+                    new Vector3(0, 0, -1), 12,
                     new Material(
-                        Material.materialType.diffuse, 
-                        new Vector3(1, 1, 0.7f))));
+                        Material.materialType.diffuse,
+                        new Vector3(1, 1, 0.7f), 0)));
             Primitives.Add(
                 new Plane(
-                    new Vector3(-1, 0, 0), 6, 
-                    new Material(Material.materialType.diffuse, 
-                    new Vector3(1, 1, 0.7f))));
+                    new Vector3(-1, 0, 0), 6,
+                    new Material(Material.materialType.diffuse,
+                    new Vector3(1, 1, 0.7f), 0)));
             lights.Add(new Light(new Vector3(-1, 2, -1), new Vector3(10, 10, 10))); // position and color of the light
             lights.Add(new Light(new Vector3(1, 6, 3), new Vector3(10, 10, 10)));
             lights.Add(new Light(new Vector3(2, 3, -4), new Vector3(2, 2, 10)));
@@ -88,16 +88,49 @@ namespace Template
                 return Reflection(ray, intersection, debug, raynumber);
             }
 
+            // if the ray intersects a dielectric, we start tracing the reflected ray and possibly the refracted ray
+            if(intersection.Type == (int)Material.materialType.dielectric && recursionDepth < maxRecursionDepth)
+            {
+                recursionDepth++;
+                return Fresnel(ray, intersection, debug, raynumber);
+            }
+
             // if the ray intersects a diffuse material, we directly calculate the light transport from all the light sources to the intersection point
             recursionDepth = 0;
             return TotalLight(intersection);
         }
 
-        public Vector3 Reflection(Ray ray, Intersection intersection, Debug debug, int raynumber) // if a ray gets reflected
+        public Vector3 Fresnel(Ray ray, Intersection intersection, Debug debug, int raynumber)
+        {
+            // gebruik gemaakt van boek hoofdstuk 13.1 (p. 304-307). De absorption heb ik niet meegenomen.
+            // verder weet ik nog niet echt wat ik met de kleur van het materiaal aan moet. Ik heb geprobeerd om intersection.Color te vermenigvuldigen met Reflection en/of Refraction,
+            // maar alles ziet er een beetje vreemd uit.
+            float c, n, r0, r; // cos(theta), index of refraction, reflectance at normal incidence
+            float dotpr = Vector3.Dot(ray.D, intersection.norm);
+            if (dotpr < 0)
+            {
+                c = -dotpr;
+                n = intersection.prim.material.ior; // hier nog shortcut voor maken
+            }
+            else
+            {
+                c = dotpr;
+                n = 1 / intersection.prim.material.ior;
+            }
+            r0 = ((n - 1) * (n - 1)) / ((n + 1) * (n + 1)); // reflectance at normal incidence
+            r = r0 + (1 - r0) * (float)Math.Pow(1 - c, 5); // reflectance
+            // nu checken of die wortel groter dan 0 is. Zo niet: alles reflecteren. Zo ja: deel reflecteren, deel refracteren
+            float arg = 1 - (1 - Vector3.Dot(ray.D, intersection.norm) * Vector3.Dot(ray.D, intersection.norm)) / (n * n);
+            if (arg < 0) // in this case, there is total internal reflection; there is no refracted ray
+                return Reflection(ray, intersection, debug, raynumber, r);
+            else
+                return Reflection(ray, intersection, debug, raynumber, r) + Refraction(ray, intersection, n, arg, r, debug, raynumber);
+        }
+
+        public Vector3 Reflection(Ray ray, Intersection intersection, Debug debug, int raynumber, float r = 0) // if a ray gets reflected
         {
             Vector3 R = ray.D - 2 * intersection.norm * Vector3.Dot(ray.D, intersection.norm); // the direction of the reflected ray
             Ray newray = new Ray(intersection.point + eps * R, R, 1E30f); // the reflected ray
-
 
             Intersection newIntersection = Intersect(newray);
 
@@ -107,6 +140,9 @@ namespace Template
                 {
                     debug.DrawRay(intersection.point, newIntersection.point, raynumber);
                 }
+            if (intersection.Type == (int)Material.materialType.dielectric)
+                return r * Trace(newray, newIntersection, debug, raynumber); 
+            // niet nog (1-r)*kleur van het materiaal, dat zit al in de refracted ray. Glas heeft geen kleur (??)
 
             float reflectiveness = intersection.Reflectiveness;
 
@@ -118,6 +154,16 @@ namespace Template
             }
             else
                 return (1 - reflectiveness) * intersection.Color + reflectiveness * Trace(newray, newIntersection, debug, raynumber);
+        }
+
+        public Vector3 Refraction(Ray ray, Intersection intersection, float ior, float arg, float r, Debug debug, int raynumber) // if a ray gets refracted
+        {
+            Vector3 t = (ray.D - intersection.norm * Vector3.Dot(ray.D, intersection.norm)) / ior - intersection.norm * (float)Math.Sqrt(arg);
+            t = Vector3.Normalize(t);
+            Ray newray = new Ray(intersection.point + eps * t, t, 1E30f); // the refracted ray
+            Intersection newIntersection = Intersect(newray);
+            raynumber++; // weet nog niet of dit moet
+            return (1 - r) * Trace(newray, newIntersection, debug, raynumber);
         }
 
         public Vector3 TotalLight(Intersection intersection) // the total light on a point
