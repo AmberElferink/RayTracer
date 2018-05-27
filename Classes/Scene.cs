@@ -45,7 +45,7 @@ namespace Template
                         Material.materialType.reflective, // type of the material
                         new Vector3(), 0.5f))); // color and reflectiveness of the material (color is irrelevant for CheckeredPlane)
             Primitives.Add(
-                new Plane(
+                new CheckeredPlane(
                     new Vector3(0, 1, 0), -5,
                     new Material(
                         Material.materialType.diffuse,
@@ -108,29 +108,25 @@ namespace Template
 
         public Vector3 Fresnel(Ray ray, Intersection intersection, Debug debug, int raynumber)
         {
-            // gebruik gemaakt van boek hoofdstuk 13.1 (p. 304-307). De absorption heb ik niet meegenomen.
-            // verder weet ik nog niet echt wat ik met de kleur van het materiaal aan moet. Ik heb geprobeerd om intersection.Color te vermenigvuldigen met Reflection en/of Refraction,
-            // maar alles ziet er een beetje vreemd uit.
-            float c, n, r0, r; // cos(theta), index of refraction, reflectance at normal incidence
+            float cos, n, r0, r; // cos(theta), index of refraction, reflectance at normal incidence
             float dotpr = Vector3.Dot(ray.D, intersection.norm);
             if (dotpr < 0)
             {
-                c = -dotpr;
+                cos = -dotpr;
                 n = intersection.IndexOfRefraction;
             }
             else
             {
-                c = dotpr;
+                cos = dotpr;
                 n = 1 / intersection.IndexOfRefraction;
             }
             r0 = ((n - 1) * (n - 1)) / ((n + 1) * (n + 1)); // reflectance at normal incidence
-            r = r0 + (1 - r0) * (float)Math.Pow(1 - c, 5); // reflectance
-            // nu checken of die wortel groter dan 0 is. Zo niet: alles reflecteren. Zo ja: deel reflecteren, deel refracteren
-            float arg = 1 - (1 - Vector3.Dot(ray.D, intersection.norm) * Vector3.Dot(ray.D, intersection.norm)) / (n * n);
-            if (arg < 0) // in this case, there is total internal reflection; there is no refracted ray
+            r = r0 + (1 - r0) * (float)Math.Pow(1 - cos, 5); // reflectance
+            float inRoot = 1 - (1 - dotpr * dotpr) / (n * n);
+            if (inRoot < 0) // in this case, there is total internal reflection; there is no refracted ray
                 return Reflection(ray, intersection, debug, raynumber, r);
             else
-                return Reflection(ray, intersection, debug, raynumber, r) + Refraction(ray, intersection, n, arg, r, debug, raynumber);
+                return Reflection(ray, intersection, debug, raynumber, r) + Refraction(ray, intersection, dotpr, n, inRoot, r, debug, raynumber);
         }
 
         public Vector3 Reflection(Ray ray, Intersection intersection, Debug debug, int raynumber, float r = 0) // if a ray gets reflected
@@ -147,8 +143,7 @@ namespace Template
                     debug.DrawRay(intersection.point, newIntersection.point, raynumber);
                 }
             if (intersection.Type == (int)Material.materialType.dielectric)
-                return r * Trace(newray, newIntersection, debug, raynumber); 
-            // niet nog (1-r)*kleur van het materiaal, dat zit al in de refracted ray. Glas heeft geen kleur (??)
+                return r * Trace(newray, newIntersection, debug, raynumber); // the (1-r) part is now included in the refracted ray
 
             float reflectiveness = intersection.Reflectiveness;
             if (intersection.prim is CheckeredPlane)
@@ -161,10 +156,10 @@ namespace Template
                 return (1 - reflectiveness) * intersection.Color + reflectiveness * Trace(newray, newIntersection, debug, raynumber);
         }
 
-        public Vector3 Refraction(Ray ray, Intersection intersection, float ior, float arg, float r, Debug debug, int raynumber) // if a ray gets refracted
+        public Vector3 Refraction(Ray ray, Intersection intersection, float dotpr, float ior, float inRoot, float r, Debug debug, int raynumber) // if a ray gets refracted
         {
-            Vector3 t = (ray.D - intersection.norm * Vector3.Dot(ray.D, intersection.norm)) / ior - intersection.norm * (float)Math.Sqrt(arg);
-            t = Vector3.Normalize(t);
+            Vector3 t = (ray.D - intersection.norm * dotpr) / ior - intersection.norm * (float)Math.Sqrt(inRoot);
+            //t = Vector3.Normalize(t);
             Ray newray = new Ray(intersection.point + eps * t, t, 1E30f); // the refracted ray
             Intersection newIntersection = Intersect(newray);
             raynumber++; // weet nog niet of dit moet
