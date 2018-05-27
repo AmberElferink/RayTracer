@@ -17,10 +17,16 @@ namespace Template
         {
             Primitives.Add(
                 new Sphere(
-                    new Vector3(1.5f, 0, 4), 0.9f, // center and radius of the sphere
+                    new Vector3(1.5f, 0, 4), 0.9f, // center and radius of the sphere (WAS: 1.5f, 0, 4)
                     new Material( // material of the sphere
-                        Material.materialType.dielectric, // type of the material
-                        new Vector3(1, 0.1f, 0.1f), 0.6f, 1.5f))); // color, reflectiveness and index of refraction of the material
+                        Material.materialType.reflective, // type of the material
+                        new Vector3(1, 0.1f, 0.1f), 0.6f))); // color, reflectiveness and index of refraction of the material
+            Primitives.Add(
+                new Sphere(
+                    new Vector3(1.6f, -0.5f, 2), 0.4f, 
+                    new Material( 
+                        Material.materialType.dielectric,
+                        new Vector3(), 0.6f, 1.5f)));
             Primitives.Add(
                 new Sphere(
                     new Vector3(0.2f, -0.7f, 2.5f), 0.55f,
@@ -110,12 +116,12 @@ namespace Template
             if (dotpr < 0)
             {
                 c = -dotpr;
-                n = intersection.prim.material.ior; // hier nog shortcut voor maken
+                n = intersection.IndexOfRefraction;
             }
             else
             {
                 c = dotpr;
-                n = 1 / intersection.prim.material.ior;
+                n = 1 / intersection.IndexOfRefraction;
             }
             r0 = ((n - 1) * (n - 1)) / ((n + 1) * (n + 1)); // reflectance at normal incidence
             r = r0 + (1 - r0) * (float)Math.Pow(1 - c, 5); // reflectance
@@ -145,7 +151,6 @@ namespace Template
             // niet nog (1-r)*kleur van het materiaal, dat zit al in de refracted ray. Glas heeft geen kleur (??)
 
             float reflectiveness = intersection.Reflectiveness;
-
             if (intersection.prim is CheckeredPlane)
             {
                 CheckeredPlane checkplane = (CheckeredPlane)intersection.prim;
@@ -163,6 +168,7 @@ namespace Template
             Ray newray = new Ray(intersection.point + eps * t, t, 1E30f); // the refracted ray
             Intersection newIntersection = Intersect(newray);
             raynumber++; // weet nog niet of dit moet
+            // misschien moet er nog iets met de debug gebeuren hier.
             return (1 - r) * Trace(newray, newIntersection, debug, raynumber);
         }
 

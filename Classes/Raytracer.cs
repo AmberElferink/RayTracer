@@ -17,7 +17,7 @@ namespace Template
         public Raytracer(Surface screenApp)
         {
             screen = screenApp;
-            camera = new Camera(new Vector3(0, 0.2f, -2.2f), new Vector3(0.3f, -0.5f, 0.8f), 40);
+            camera = new Camera(new Vector3(0, 0.2f, -2.2f), new Vector3(0.5f, -1, 0.8f), 40);
             scene = new Scene();
             debug = new Debug(screen, scene);
             RscreenWidth = screen.width / 2;
