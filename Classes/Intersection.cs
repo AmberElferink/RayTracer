@@ -34,5 +34,10 @@ public class Intersection
     {
         get { return prim.material.type; }
     }
+
+    public float IndexOfRefraction
+    {
+        get { return prim.material.ior; }
+    }
 }
 

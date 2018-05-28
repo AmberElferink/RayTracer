@@ -42,7 +42,6 @@ namespace Template
             int x;
             int y;
 
-
             foreach (Primitive primitive in scene.Primitives)
             {
                 if (primitive is Sphere)
