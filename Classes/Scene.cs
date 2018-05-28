@@ -20,7 +20,7 @@ namespace Template
                     new Vector3(1.5f, 0, 4), 0.9f, // center and radius of the sphere (WAS: 1.5f, 0, 4)
                     new Material( // material of the sphere
                         Material.materialType.reflective, // type of the material
-                        new Vector3(1, 0.1f, 0.1f), 0.6f))); // color, reflectiveness and index of refraction of the material
+                        new Vector3(1, 0.1f, 0.1f), 0.6f))); // color, reflectiveness and index of refraction of the material WAS: 0.6f
             Primitives.Add(
                 new Sphere(
                     new Vector3(1.6f, -0.5f, 2), 0.4f, 
@@ -91,7 +91,10 @@ namespace Template
             if (intersection.Type == (int)Material.materialType.reflective && recursionDepth < maxRecursionDepth)
             {
                 recursionDepth++;
-                return Reflection(ray, intersection, debug, raynumber);
+                // NIEUW: ik heb hier al het (1-r)*TotalLight gedeelte gestopt, dan hoeft dat niet in Reflection en hoef je daar geen onderscheid in te maken
+                // tussen dielectric en reflective. Zie ook Reflection.
+                float reflectiveness = intersection.Reflectiveness;
+                return Reflection(ray, intersection, debug, raynumber, reflectiveness) + (1 - reflectiveness) * TotalLight(intersection);
             }
 
             // if the ray intersects a dielectric, we start tracing the reflected ray and possibly the refracted ray
@@ -123,13 +126,20 @@ namespace Template
             r0 = ((n - 1) * (n - 1)) / ((n + 1) * (n + 1)); // reflectance at normal incidence
             r = r0 + (1 - r0) * (float)Math.Pow(1 - cos, 5); // reflectance
             float inRoot = 1 - (1 - dotpr * dotpr) / (n * n);
-            if (inRoot < 0) // in this case, there is total internal reflection; there is no refracted ray
+            /*if (inRoot < 0) // in this case, there is total internal reflection; there is no refracted ray
                 return Reflection(ray, intersection, debug, raynumber, r);
             else
-                return Reflection(ray, intersection, debug, raynumber, r) + Refraction(ray, intersection, dotpr, n, inRoot, r, debug, raynumber);
+                return Reflection(ray, intersection, debug, raynumber, r) + Refraction(ray, intersection, dotpr, n, inRoot, r, debug, raynumber);*/
+
+            // NIEUW: in plaats van de bovenstaande regels, hieronder een iets andere formulering. Als r = 1 zal Refraction sowieso 0 opleveren, dus het komt op hetzelfde neer.
+            // Voordeel: we hebben nu één regel voor beide gevallen, ziet er wellicht mooier uit. Nadeel: we moeten nu altijd de functie Refraction aanroepen, ook als daar
+            // niks uit gaat komen, wat extra tijd kost. We kunnen hier dus nog even kiezen welk van de twee we doen.
+
+            if (inRoot < 0) r = 1; // in this case, there is total internal reflection; there is no refracted ray
+            return Reflection(ray, intersection, debug, raynumber, r) + Refraction(ray, intersection, dotpr, n, inRoot, r, debug, raynumber);
         }
 
-        public Vector3 Reflection(Ray ray, Intersection intersection, Debug debug, int raynumber, float r = 0) // if a ray gets reflected
+        public Vector3 Reflection(Ray ray, Intersection intersection, Debug debug, int raynumber, float r) // if a ray gets reflected
         {
             Vector3 R = ray.D - 2 * intersection.norm * Vector3.Dot(ray.D, intersection.norm); // the direction of the reflected ray
             Ray newray = new Ray(intersection.point + eps * R, R, 1E30f); // the reflected ray
@@ -142,18 +152,25 @@ namespace Template
                 {
                     debug.DrawRay(intersection.point, newIntersection.point, raynumber);
                 }
-            if (intersection.Type == (int)Material.materialType.dielectric)
+            /*if (intersection.Type == (int)Material.materialType.dielectric)
                 return r * Trace(newray, newIntersection, debug, raynumber); // the (1-r) part is now included in the refracted ray
 
-            float reflectiveness = intersection.Reflectiveness;
-            if (intersection.prim is CheckeredPlane)
+            float reflectiveness = intersection.Reflectiveness;*/
+
+            // NIEUW: alles wat tussen /* */ staat hierboven én hieronder kunnen we vervangen door de regel return r* Trace(....).
+            // We hebben namelijk gezorgd dat het (1-reflectiveness)*color gedeelte al wordt aangeroepen in de functie Trace bij het geval materialtype = reflective.
+            // Bovendien zorgen we daar, door TotalLight aan te roepen, ervoor dat we ook meenemen dat die kleur alleen gereturnd wordt als er ook licht op schijnt
+            // (dat is hieronder nog niet zo). Deze functie wordt hiermee een stuk korter, mooier, duidelijker.
+
+            return r * Trace(newray, newIntersection, debug, raynumber);
+            /*if (intersection.prim is CheckeredPlane)
             {
                 CheckeredPlane checkplane = (CheckeredPlane)intersection.prim;
                 Vector3 checkeredColor = checkplane.GetPixelColor(intersection.point);
                 return (1 - reflectiveness) * checkeredColor + reflectiveness * Trace(newray, newIntersection, debug, raynumber);
             }
             else
-                return (1 - reflectiveness) * intersection.Color + reflectiveness * Trace(newray, newIntersection, debug, raynumber);
+                return (1 - reflectiveness) * intersection.Color + reflectiveness * Trace(newray, newIntersection, debug, raynumber);*/
         }
 
         public Vector3 Refraction(Ray ray, Intersection intersection, float dotpr, float ior, float inRoot, float r, Debug debug, int raynumber) // if a ray gets refracted
