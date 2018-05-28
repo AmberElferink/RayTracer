@@ -64,24 +64,34 @@ namespace Template
 
         public void DrawRay(Vector3 start, Vector3 end, int raynumber)
         {
-            if(raynumber == 0) //primary ray
+            int startX = (int)(offsetX + translateX + start.X * scale);
+            int endX = (int)(translateX + offsetX + end.X * scale);
+            int startY = (int)(translateY + start.Z * -scale);
+            int endY = (int)(translateY + end.Z * -scale);
+            raycounter2 = 0;
+            if (startX < DscreenWidth)
+                startX = DscreenWidth;
+            if (endX < DscreenWidth)
+                endX = DscreenWidth;
+
+            if (raynumber == 0) //primary ray
             {
                 color = CreateColor(new Vector3(1, 1, 0));
                 raycounter++;
                 if (raycounter >= 50)
                 {
                     raycounter = 0;
-                    screen.Line((int)(offsetX + translateX + start.X * scale), (int)(translateY + start.Z * -scale), (int)(translateX + offsetX + end.X * scale), (int)(translateY + end.Z * -scale), color);
+                    screen.Line(startX,startY, endX, endY, color);
                 }
             }
             else if (raynumber == 1) //shadowray
             {
                 color = CreateColor(new Vector3(0, 0, 1));
                 raycounter1++;
-                if (raycounter1 >= 10)
+                if (raycounter1 >= 10000)
                 {
                     raycounter1 = 0;
-                    screen.Line((int)(offsetX + translateX + start.X * scale), (int)(translateY + start.Z * -scale), (int)(translateX + offsetX + end.X * scale), (int)(translateY + end.Z * -scale), color);
+                    screen.Line(startX, startY, endX, endY, color);
                 }
             }
             else if (raynumber == 2)  //reflection
@@ -90,8 +100,8 @@ namespace Template
                 raycounter2++;
                 if(raycounter2 >= 800)
                 {
-                    raycounter2 = 0;
-                    screen.Line((int)(offsetX + translateX + start.X * scale), (int)(translateY + start.Z * -scale), (int)(translateX + offsetX + end.X * scale), (int)(translateY + end.Z * -scale), color);
+
+                    screen.Line(startX, startY, endX , endY, color);
                 }
             }
         }

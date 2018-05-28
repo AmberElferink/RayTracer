@@ -72,7 +72,7 @@ namespace Template
             lights.Add(new Light(new Vector3(-1, 2, -1), new Vector3(10, 10, 10))); // position and color of the light
             lights.Add(new Light(new Vector3(1, 6, 3), new Vector3(10, 10, 10)));
             lights.Add(new Light(new Vector3(2, 3, -4), new Vector3(2, 2, 10)));
-            lights.Add(new Light(new Vector3(0, 1, 0), new Vector3(15, 15, 15)));*/
+            lights.Add(new Light(new Vector3(0, 1, 0), new Vector3(15, 15, 15)));
             lights.Add(new Spotlight(new Vector3(-1, 2, -1), new Vector3(0.2f, -0.7f, 2.5f), 30, new Vector3(100f, 80f, 20f)));
         }
 
@@ -103,14 +103,14 @@ namespace Template
                 // NIEUW: ik heb hier al het (1-r)*TotalLight gedeelte gestopt, dan hoeft dat niet in Reflection en hoef je daar geen onderscheid in te maken
                 // tussen dielectric en reflective. Zie ook Reflection.
                 float reflectiveness = intersection.Reflectiveness;
-                return Reflection(ray, intersection, debug, raynumber, reflectiveness) + (1 - reflectiveness) * TotalLight(intersection);
+                return Reflection(ray, intersection, reflectiveness) + (1 - reflectiveness) * TotalLight(intersection);
             }
 
             // if the ray intersects a dielectric, we start tracing the reflected ray and possibly the refracted ray
             if(intersection.Type == (int)Material.materialType.dielectric && recursionDepth < maxRecursionDepth)
             {
                 recursionDepth++;
-                return Fresnel(ray, intersection, debug, raynumber);
+                return Fresnel(ray, intersection);
             }
 
             // if the ray intersects a diffuse material, we directly calculate the light transport from all the light sources to the intersection point
@@ -118,7 +118,7 @@ namespace Template
             return TotalLight(intersection);
         }
 
-        public Vector3 Fresnel(Ray ray, Intersection intersection, Debug debug, int raynumber)
+        public Vector3 Fresnel(Ray ray, Intersection intersection)
         {
             float cos, n, r0, r; // cos(theta), index of refraction, reflectance at normal incidence
             float dotpr = Vector3.Dot(ray.D, intersection.norm);
@@ -145,10 +145,10 @@ namespace Template
             // niks uit gaat komen, wat extra tijd kost. We kunnen hier dus nog even kiezen welk van de twee we doen.
 
             if (inRoot < 0) r = 1; // in this case, there is total internal reflection; there is no refracted ray
-            return Reflection(ray, intersection, debug, raynumber, r) + Refraction(ray, intersection, dotpr, n, inRoot, r, debug, raynumber);
+            return Reflection(ray, intersection, r) + Refraction(ray, intersection, dotpr, n, inRoot, r);
         }
 
-        public Vector3 Reflection(Ray ray, Intersection intersection, Debug debug, int raynumber, float r) // if a ray gets reflected
+        public Vector3 Reflection(Ray ray, Intersection intersection, float r) // if a ray gets reflected
         {
             Vector3 R = ray.D - 2 * intersection.norm * Vector3.Dot(ray.D, intersection.norm); // the direction of the reflected ray
             Ray newray = new Ray(intersection.point + eps * R, R, 1E30f); // the reflected ray
@@ -165,7 +165,7 @@ namespace Template
             // Bovendien zorgen we daar, door TotalLight aan te roepen, ervoor dat we ook meenemen dat die kleur alleen gereturnd wordt als er ook licht op schijnt
             // (dat is hieronder nog niet zo). Deze functie wordt hiermee een stuk korter, mooier, duidelijker.
 
-            return r * Trace(newray, newIntersection, debug, raynumber);
+            return r * Trace(newray, newIntersection);
             /*if (intersection.prim is CheckeredPlane)
             {
                 CheckeredPlane checkplane = (CheckeredPlane)intersection.prim;
@@ -176,15 +176,13 @@ namespace Template
                 return (1 - reflectiveness) * intersection.Color + reflectiveness * Trace(newray, newIntersection, debug, raynumber);*/
         }
 
-        public Vector3 Refraction(Ray ray, Intersection intersection, float dotpr, float ior, float inRoot, float r, Debug debug, int raynumber) // if a ray gets refracted
+        public Vector3 Refraction(Ray ray, Intersection intersection, float dotpr, float ior, float inRoot, float r) // if a ray gets refracted
         {
             Vector3 t = (ray.D - intersection.norm * dotpr) / ior - intersection.norm * (float)Math.Sqrt(inRoot);
             //t = Vector3.Normalize(t);
             Ray newray = new Ray(intersection.point + eps * t, t, 1E30f); // the refracted ray
             Intersection newIntersection = Intersect(newray);
-            raynumber++; // weet nog niet of dit moet
-            // misschien moet er nog iets met de debug gebeuren hier.
-            return (1 - r) * Trace(newray, newIntersection, debug, raynumber);
+            return (1 - r) * Trace(newray, newIntersection);
         }
 
         public Vector3 TotalLight(Intersection intersection) // the total light on a point

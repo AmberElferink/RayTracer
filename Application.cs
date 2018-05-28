@@ -37,13 +37,17 @@ namespace Template {
         {
             if (key == Key.Down || key == Key.S)
             {
-                Console.WriteLine(raytracer.camera.E);
                 if (raytracer.camera.E.Z <= 0.8)
+                {
                     raytracer.camera.E.Z -= 0.1f;
+                    raytracer.camera.T.Z -= 0.1f;
+                }
+
             }
             if (key == Key.Up || key == Key.W)
             {
                 raytracer.camera.E.Z += 0.1f;
+                raytracer.camera.T.Z += 0.1f;
             }
             if (key == Key.Left || key == Key.A)
             {
