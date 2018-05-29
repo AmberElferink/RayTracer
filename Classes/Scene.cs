@@ -106,7 +106,7 @@ new Vector3(0.05f, 0.05f, 1f), 1f)));
                         new Vector3(0.95f, 0.95f, 0.95f), 0)));
             Primitives.Add(
                 new Plane(
-                    new Vector3(0, 0, -1), 12,
+                    new Vector3(0, 0, -1), 10,
                     new Material(
                         Material.materialType.diffuse,
                         new Vector3(1, 0.1f, 0.1f), 0)));
@@ -115,9 +115,13 @@ new Vector3(0.05f, 0.05f, 1f), 1f)));
                     new Vector3(-1, 0, 0), 6,
                     new Material(Material.materialType.diffuse,
                     new Vector3(0.7f, 0.1f, 0.7f), 0)));
-            lights.Add(new Light(new Vector3(1, 6, 3), new Vector3(10, 10, 10))); // position and color of the light
 
-            lights.Add(new Light(new Vector3(0, 5, 0), new Vector3(50, 50, 50))); // position and color of the light
+
+            lights.Add(new Light(new Vector3(1, 6, 3), new Vector3(10, 10, 10))); // position and color of the light
+            lights.Add(new Light(new Vector3(1, 6, 7), new Vector3(10, 10, 10))); // position and color of the light
+            lights.Add(new Light(new Vector3(0, 5, 0), new Vector3(30, 30, 30))); // position and color of the light
+            lights.Add(new Spotlight(new Vector3(0, 3, 6), new Vector3(0, 1, 6), 30, new Vector3(1000, 1000, 1000)));
+
             /*Primitives.Add(
                 new Sphere(
                     new Vector3(1.5f, 0, 4), 0.8f, // center and radius of the sphere 
