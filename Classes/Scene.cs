@@ -16,7 +16,58 @@ namespace Template
 
         public Scene()
         {
+
             Primitives.Add(
+    new CheckeredPlane(
+        new Vector3(0, 1, 0), 0,
+        new Material(
+            Material.materialType.diffuse,
+            new Vector3(0.95f, 0.95f, 0.95f), 0)));
+
+            Primitives.Add(
+              new Triangle(
+                  new Vector3(-2f, 0.5f, 9f), // bottom left of triangle
+                  new Vector3(2f, 0.5f, 9f), // bottom right of triangle
+                  new Vector3(0f, 3.5f, 7f), // top of triangle
+                  new Material(Material.materialType.reflective,
+                  new Vector3(1, 1, 1), 1)));
+
+
+
+
+            Primitives.Add(
+              new Sphere(
+                  new Vector3(0, 0.5f, 7), 0.5f,
+                  new Material(
+                      Material.materialType.reflective,
+                      new Vector3(0.05f, 1, 0.05f), 1f)));
+            Primitives.Add(
+  new Sphere(
+      new Vector3(0.5f, 0.5f, 6.5f), 0.5f,
+      new Material(
+          Material.materialType.reflective,
+          new Vector3(1f, 0.05f, 0.05f), 1f)));
+
+            Primitives.Add(
+new Sphere(
+new Vector3(-0.5f, 0.5f, 6.5f), 0.5f,
+new Material(
+Material.materialType.reflective,
+new Vector3(0.05f, 0.05f, 1f), 1f)));
+
+
+
+            Primitives.Add(
+    new Plane(
+        new Vector3(0, 0, 1), 10,
+        new Material(
+            Material.materialType.diffuse,
+            new Vector3(1f, 1f, 1f), 0)));
+
+
+
+            lights.Add(new Light(new Vector3(0, 5, 0), new Vector3(50, 50, 50))); // position and color of the light
+            /*Primitives.Add(
                 new Sphere(
                     new Vector3(1.5f, 0, 4), 0.8f, // center and radius of the sphere 
                     new Material( // material of the sphere
@@ -75,7 +126,7 @@ namespace Template
             lights.Add(new Spotlight(
                 new Vector3(-1, 2, -1), // position of spotlight
                 new Vector3(0.2f, -0.7f, 2.5f), 30, // direction and angle of spotlight
-                new Vector3(80f, 80f, 80f))); // color of spotlight
+                new Vector3(80f, 80f, 80f))); // color of spotlight*/
         }
 
 
