@@ -9,7 +9,7 @@ namespace Template
     {
         List<Light> lights = new List<Light>(); // all the lights in the scene
         List<Primitive> primitives = new List<Primitive>(); // all the primitives in the scene
-        float eps = 0.00001f; // offset for calculating secondary rays
+        float eps = 0.00001f; // offset for calculating secondary rays and shadow rays
         int recursionDepth = 0;
         int maxRecursionDepth = 10;
         public Debug debug;
