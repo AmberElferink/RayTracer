@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenTK;
+﻿using OpenTK;
 
 public class Intersection
 {
-    public float t; // intersection distance
+    public float t; // distance from starting point to intersection point
     public Vector3 point; // intersection point
     public Vector3 norm; // normal at intersection point
-    public Primitive prim; // nearest primitive
+    public Primitive prim; // primitive where the intersection is
 
     public Intersection(float t, Vector3 point, Vector3 norm, Primitive prim)
     {

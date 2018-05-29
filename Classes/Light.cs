@@ -1,10 +1,11 @@
 ﻿using OpenTK;
 using System;
 
+
 public class Light
 {
-    public Vector3 position;
-    public Vector3 color;
+    public Vector3 position; // position of the light
+    public Vector3 color; // color of the light
 
     public Light(Vector3 pos, Vector3 col)
     {
@@ -12,6 +13,8 @@ public class Light
         color = col;
     }
 }
+
+
 
 public class Spotlight:Light
 {

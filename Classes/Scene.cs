@@ -7,9 +7,9 @@ namespace Template
 {
     public class Scene
     {
-        List<Light> lights = new List<Light>();
-        List<Primitive> primitives = new List<Primitive>();
-        float eps = 0.00001f;
+        List<Light> lights = new List<Light>(); // all the lights in the scene
+        List<Primitive> primitives = new List<Primitive>(); // all the primitives in the scene
+        float eps = 0.00001f; // offset for calculating secondary rays
         int recursionDepth = 0;
         int maxRecursionDepth = 10;
         public Debug debug;
@@ -41,14 +41,14 @@ namespace Template
                     new Vector3(0.1f, 0.1f, 1), 0.7f)));
             Primitives.Add(
                 new Triangle(
-                    new Vector3(-1.5f, -1, 5.4f), // bottom left
-                    new Vector3(3.2f, -1, 5.4f), // bottom right
-                    new Vector3(0.7f, 3.3f, 4), // top
+                    new Vector3(-1.5f, -1, 5.4f), // bottom left of triangle
+                    new Vector3(3.2f, -1, 5.4f), // bottom right of triangle
+                    new Vector3(0.7f, 3.3f, 4), // top of triangle
                     new Material(Material.materialType.reflective,
                     new Vector3(1, 1, 1), 1)));
             Primitives.Add(
                 new CheckeredPlane(
-                    new Vector3(0, 1, 0), 2, // normal to the plane; d = -N DOT P (P a point in the plane)
+                    new Vector3(0, 1, 0), 2, // normal to the plane; d = -p(dot)N (p a point in the plane)
                     new Material( // material of the plane
                         Material.materialType.reflective, // type of the material
                         new Vector3(), 0.8f))); // color and reflectiveness of the material (color is irrelevant for CheckeredPlane)
@@ -69,14 +69,18 @@ namespace Template
                     new Vector3(-1, 0, 0), 6,
                     new Material(Material.materialType.diffuse,
                     new Vector3(0.7f, 0.1f, 0.7f), 0)));
-            //lights.Add(new Light(new Vector3(-1, 2, -1), new Vector3(10, 10, 10))); 
             lights.Add(new Light(new Vector3(1, 6, 3), new Vector3(10, 10, 10))); // position and color of the light
             lights.Add(new Light(new Vector3(-3, 3, 3.2f), new Vector3(10, 10, 10)));
             lights.Add(new Light(new Vector3(0, 1, 0), new Vector3(15, 15, 15))); 
-            lights.Add(new Spotlight(new Vector3(-1, 2, -1), new Vector3(0.2f, -0.7f, 2.5f), 30, new Vector3(80f, 80f, 80f))); // position, direction, angle and color of spotlight
+            lights.Add(new Spotlight(
+                new Vector3(-1, 2, -1), // position of spotlight
+                new Vector3(0.2f, -0.7f, 2.5f), 30, // direction and angle of spotlight
+                new Vector3(80f, 80f, 80f))); // color of spotlight
         }
 
-        // Method that returns closest distance to an intersection with a primitive
+
+
+        // method that returns Intersection of a certain ray (primitive it intersects, distance, normal at intersection point etc.)
         public Intersection Intersect(Ray ray)
         {
             Intersection intersect = null;
@@ -89,7 +93,9 @@ namespace Template
             return intersect;
         }
 
-        // Method that traces a ray
+
+
+        // method that traces a ray and returns the color of the pixel the ray is shot through
         public Vector3 Trace(Ray ray, Intersection intersection)
         {
             // if the ray finds does not intersect any primitive, return black
@@ -104,7 +110,7 @@ namespace Template
                 return Reflection(ray, intersection, reflectiveness) + (1 - reflectiveness) * TotalLight(intersection);
             }
 
-            // if the ray intersects a dielectric, we start tracing the reflected ray and possibly the refracted ray
+            // if the ray intersects a dielectric, we start tracing the reflected ray and (possibly) the refracted ray
             if(intersection.Type == (int)Material.materialType.dielectric && recursionDepth < maxRecursionDepth)
             {
                 recursionDepth++;
@@ -116,9 +122,13 @@ namespace Template
             return TotalLight(intersection);
         }
 
+
+
+        // method that starts tracing the reflected and refracted ray (for dielectrics)
         public Vector3 Fresnel(Ray ray, Intersection intersection)
         {
-            float cos, n, r0, r; // cos(theta), index of refraction, reflectance at normal incidence
+            // source of formulas: 'Fundamentals of Computer Graphics' by Peter Shirley
+            float cos, n, r0, r; // cosine of the angle of incidence, index of refraction, reflectance at normal incidence
             float dotpr = Vector3.Dot(ray.D, intersection.norm);
             if (dotpr < 0)
             {
@@ -135,10 +145,13 @@ namespace Template
             float inRoot = 1 - (1 - dotpr * dotpr) / (n * n);
 
             if (inRoot < 0) r = 1; // in this case, there is total internal reflection; there is no refracted ray
-            return Reflection(ray, intersection, r) + Refraction(ray, intersection, dotpr, n, inRoot, r);
+            return Reflection(ray, intersection, r) + Refraction(ray, intersection, dotpr, n, inRoot, r); // part of the light gets reflected, part gets refracted
         }
 
-        public Vector3 Reflection(Ray ray, Intersection intersection, float r) // if a ray gets reflected
+
+
+        // method that calculates and traces a reflected ray
+        public Vector3 Reflection(Ray ray, Intersection intersection, float r)
         {
             Vector3 R = ray.D - 2 * intersection.norm * Vector3.Dot(ray.D, intersection.norm); // the direction of the reflected ray
             Ray newray = new Ray(intersection.point + eps * R, R, 1E30f); // the reflected ray
@@ -158,42 +171,52 @@ namespace Template
                 return r * intersection.Color * Trace(newray, newIntersection);
         }
 
-        public Vector3 Refraction(Ray ray, Intersection intersection, float dotpr, float ior, float inRoot, float r) // if a ray gets refracted
+
+
+        // method that calculates and traces a refracted ray
+        public Vector3 Refraction(Ray ray, Intersection intersection, float dotpr, float ior, float inRoot, float r)
         {
-            Vector3 t = (ray.D - intersection.norm * dotpr) / ior - intersection.norm * (float)Math.Sqrt(inRoot);
+            // source of formulas: 'Fundamentals of Computer Graphics' by Peter Shirley
+            Vector3 t = (ray.D - intersection.norm * dotpr) / ior - intersection.norm * (float)Math.Sqrt(inRoot); // the direction of the refracted ray
             Ray newray = new Ray(intersection.point + eps * t, t, 1E30f); // the refracted ray
             Intersection newIntersection = Intersect(newray);
             return (1 - r) * Trace(newray, newIntersection);
         }
 
-        public Vector3 TotalLight(Intersection intersection) // the total light on a point
+
+
+        // method that returns the total light on an intersection point
+        public Vector3 TotalLight(Intersection intersection)
         {
             Vector3 totalLight = new Vector3(0, 0, 0);
             foreach (Light light in lights)
             {
-                Vector3 L = light.position - intersection.point;
+                Vector3 L = light.position - intersection.point; // direction of a ray from the intersection point to the light source
                 float dist = L.Length;
                 L = Vector3.Normalize(L);
                 float dotpr = Vector3.Dot(intersection.norm, L);
                 if (dotpr > 0)
                 {
                     bool occluded = Occlusion(L, dist, intersection, light);
-                    if (occluded) continue;
+                    if (occluded) continue; // if the intersection point is not reached by light from this source, we move on to the next light source
                     else totalLight = LightTransport(L, dist, intersection, light.color, totalLight);
                 }
             }
-            if (totalLight.X > 1) totalLight.X = 1;
+            if (totalLight.X > 1) totalLight.X = 1; // the value of each color component is clamped to 1
             if (totalLight.Y > 1) totalLight.Y = 1;
             if (totalLight.Z > 1) totalLight.Z = 1;
             return totalLight;
         }
 
-        public bool Occlusion(Vector3 L, float dist, Intersection intersection, Light light) // checks if an intersection point is occluded from a light source by shooting a shadow ray
+
+
+        // method that casts a shadow ray to check if an intersection point is occluded from a light source
+        public bool Occlusion(Vector3 L, float dist, Intersection intersection, Light light) 
         {
             float tmax = dist - 2 * eps; // distance from intersection point to light, with correction for offset
             Ray shadowray = new Ray(intersection.point + eps * L, L, tmax);
             Intersection occluder = Intersect(shadowray);
-            if (occluder != null)
+            if (occluder != null) // if the shadow ray finds an intersection with another primitive, the original intersection point is occluded
                 return true;
             else if (light is Spotlight)
             {
@@ -206,8 +229,12 @@ namespace Template
             return false;
         }
 
-        public Vector3 LightTransport(Vector3 L, float dist, Intersection intersection, Vector3 lightColor, Vector3 totalLight) // the light transport from all the light sources illuminating a point
+
+
+        // method that calculates the light transport from all the light sources illuminating a point
+        public Vector3 LightTransport(Vector3 L, float dist, Intersection intersection, Vector3 lightColor, Vector3 totalLight) 
         {
+            // source of formulas: slides lecture 5+6
             float dotpr = Vector3.Dot(intersection.norm, L);
             if (dotpr > 0)
                 if (intersection.prim is CheckeredPlane)
@@ -220,6 +247,8 @@ namespace Template
                     totalLight += lightColor * dotpr * (1 / (dist * dist)) * intersection.Color;
             return totalLight;
         }
+
+
 
         public List<Primitive> Primitives
         {
