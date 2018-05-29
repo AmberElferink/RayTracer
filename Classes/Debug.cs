@@ -34,12 +34,10 @@ namespace Template
 
 
 
-
         public void Render()
         {
             DrawCircles();
         }
-
 
 
 
@@ -68,7 +66,6 @@ namespace Template
                 }
             }
         }
-
 
 
 
@@ -117,6 +114,7 @@ namespace Template
                 }
             }
         }
+
 
 
         //converts the floats from 0 to 1 (or a bit more if too much light) in the vector to values of 0 to 255

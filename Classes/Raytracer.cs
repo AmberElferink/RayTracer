@@ -25,7 +25,6 @@ namespace Template
 
 
 
-
         public void Render()
         {
             screen.Clear(0);
@@ -67,6 +66,7 @@ namespace Template
         }
 
 
+
         //convert the 0 to 1 (or higher for more light) float to values between 0 and 255
         int CreateColor(Vector3 color)
         {
@@ -75,5 +75,5 @@ namespace Template
             int b = (int)(Math.Min(1, color.Z) * 255);
             return (r << 16) + (g << 8) + b;
         }
-    } //class raytracer
-} //namespace template
+    } 
+} 

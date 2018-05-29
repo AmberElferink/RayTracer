@@ -97,7 +97,7 @@ public class Triangle : Primitive
     float d;
     Vector3 N;
 
-    public Triangle (Vector3 V1, Vector3 V2, Vector3 V3, Material material)
+    public Triangle (Vector3 V1, Vector3 V2, Vector3 V3, Material material) // V1, V2, V3 are the three corners of the triangle
     {
         this.material = material;
 
@@ -109,7 +109,6 @@ public class Triangle : Primitive
         dot1 = Vector3.Dot(u, v);
         dot2 = Vector3.Dot(u, u);
         dot3 = Vector3.Dot(v, v);
-
 
         N = Vector3.Cross(u, v);
         N.Normalize();
