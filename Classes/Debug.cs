@@ -32,11 +32,18 @@ namespace Template
 
         }
 
+
+
+
         public void Render()
         {
             DrawCircles();
         }
 
+
+
+
+        //draws the spheres of the scene
         void DrawCircles()
         {
             int x;
@@ -62,6 +69,10 @@ namespace Template
             }
         }
 
+
+
+
+        //draws all different kind of rays. Is called from the classes where the rays are shot.
         public void DrawRay(Vector3 start, Vector3 end, int raynumber)
         {
             int startX = (int)(offsetX + translateX + start.X * scale);
@@ -74,6 +85,7 @@ namespace Template
             if (endX < DscreenWidth)
                 endX = DscreenWidth;
 
+            //per kind of ray, the raycounter is increased and the wanted amount of rays to be drawn in the debug can be selected by setting the racounter >= value
             if (raynumber == 0) //primary ray
             {
                 color = CreateColor(new Vector3(1, 1, 0));
@@ -106,6 +118,8 @@ namespace Template
             }
         }
 
+
+        //converts the floats from 0 to 1 (or a bit more if too much light) in the vector to values of 0 to 255
         int CreateColor(Vector3 color)
         {
             int r = (int)(Math.Min(1, color.X) * 255);
@@ -113,7 +127,5 @@ namespace Template
             int b = (int)(Math.Min(1, color.Z) * 255);
             return (r << 16) + (g << 8) + b;
         }
-
     }
-
 }
