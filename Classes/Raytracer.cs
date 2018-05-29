@@ -35,14 +35,33 @@ namespace Template
             {
                 for (int x = 0; x < RscreenWidth; x++)
                 {
-                    //generates a ray from the camera eye in the direction of the position of the pixel on the R3 plane
-                    Vector3 D = (float)x / (float)RscreenWidth * (camera.p1 - camera.p0) + (float)y / (float)screen.height * (camera.p2 - camera.p0) + camera.p0 - camera.E;
-                    D.Normalize();
-                    Ray ray = new Ray(camera.E, D, 1E30f);
+                    int raynumber = 0;
 
-                    //Intersect this ray, and draw the corresponding color to the screen.
-                    Intersection intersection = scene.Intersect(ray);
-                    screen.pixels[x + y * screen.width] = CreateColor(scene.Trace(ray, intersection));
+                     Ray ray1 = new Ray(camera.E, D(x - 0.5f, y + 0.5f), 1E30f);
+                     Ray ray2 = new Ray(camera.E, D(x - 0.5f, y - 0.5f), 1E30f);
+                     Ray ray3 = new Ray(camera.E, D(x + 0.5f, y + 0.5f), 1E30f);
+                     Ray ray4 = new Ray(camera.E, D(x + 0.5f, y - 0.5f), 1E30f);
+                     Ray ray5 = new Ray(camera.E, D(x, y), 1E30f);
+
+                    //Ray ray = new Ray(camera.E, D, 1E30f);
+                    Intersection intersection1 = scene.Intersect(ray1);
+                    Intersection intersection2 = scene.Intersect(ray2);
+                    Intersection intersection3 = scene.Intersect(ray3);
+                    Intersection intersection4 = scene.Intersect(ray4);
+                    Intersection intersection5 = scene.Intersect(ray5);
+
+                    Vector3 color1 = scene.Trace(ray1, intersection1, debug, raynumber);
+                    Vector3 color2 = scene.Trace(ray2, intersection2, debug, raynumber);
+                    Vector3 color3 = scene.Trace(ray3, intersection3, debug, raynumber);
+                    Vector3 color4 = scene.Trace(ray4, intersection4, debug, raynumber);
+                    Vector3 color5 = scene.Trace(ray5, intersection4, debug, raynumber);
+
+                    Vector3 AverageColor; 
+                    AverageColor.X = (color1.X + color2.X + color3.X + color4.X + color5.X) / 5;
+                    AverageColor.Y = (color1.Y + color2.Y + color3.Y + color4.Y + color5.Y) / 5;
+                    AverageColor.Z = (color1.Z + color2.Z + color3.Z + color4.Z + color5.Z) / 5;
+
+                    screen.pixels[x + y * screen.width] = CreateColor(AverageColor);
 
 
                     //if there is an intersection, draw the debug output
@@ -61,6 +80,7 @@ namespace Template
                             }
                         }
                     }
+
                 }
             }
         }
