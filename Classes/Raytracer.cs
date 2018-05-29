@@ -12,12 +12,11 @@ namespace Template
         public Camera camera;
         public Scene scene;
         int RscreenWidth;
-        int raycounter = 0;
 
         public Raytracer(Surface screenApp)
         {
             screen = screenApp;
-            camera = new Camera(new Vector3(0, 0.2f, -2.2f), new Vector3(0.5f, -1, 0.8f), 40);
+            camera = new Camera(new Vector3(0, 0.5f, -2.2f), new Vector3(0.5f, -0.15f, 0.8f), 40); // Positie WAS: 0, 0.2f, -2.2f
             scene = new Scene();
             debug = new Debug(screen, scene);
             scene.debug = debug;
@@ -33,33 +32,27 @@ namespace Template
             {
                 for (int x = 0; x < RscreenWidth; x++)
                 {
-                    Vector3 D = (float)x / (float)RscreenWidth* (camera.p1 - camera.p0) + (float)y / (float)screen.height * (camera.p2 - camera.p0) + camera.p0 - camera.E;
+                    Vector3 D = (float)x / (float)RscreenWidth * (camera.p1 - camera.p0) + (float)y / (float)screen.height * (camera.p2 - camera.p0) + camera.p0 - camera.E;
                     D.Normalize();
                     Ray ray = new Ray(camera.E, D, 1E30f);
                     Intersection intersection = scene.Intersect(ray);
                     screen.pixels[x + y * screen.width] = CreateColor(scene.Trace(ray, intersection));
-                    
-                    if(intersection!= null)
+
+                    if (intersection != null)
                     {
                         //Debug output
                         if (y == screen.height / 2)
                         {
-
-
-                                if (intersection.prim is Sphere || intersection.prim is Triangle)
-                                {
-                                    debug.DrawRay(camera.E, intersection.point, 0);
-                                }
-                                else
-                                {
-                                    debug.DrawRay(camera.E, ray.D * ray.t, 0);
-                                }
-
-
+                            if (intersection.prim is Sphere || intersection.prim is Triangle)
+                            {
+                                debug.DrawRay(camera.E, intersection.point, 0);
+                            }
+                            else
+                            {
+                                debug.DrawRay(camera.E, ray.D * ray.t, 0);
+                            }
                         }
                     }
-                    
-
                 }
             }
         }
