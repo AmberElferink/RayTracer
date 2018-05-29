@@ -16,7 +16,7 @@ namespace Template
         public Raytracer(Surface screenApp)
         {
             screen = screenApp;
-            camera = new Camera(new Vector3(0, 0.75f, 0), new Vector3(0, 8.5f, 7f), 40); 
+            camera = new Camera(new Vector3(0, 0.75f, 0), new Vector3(0, 0.5f, 7f), 40); 
             scene = new Scene();
             debug = new Debug(screen, scene);
             scene.debug = debug;

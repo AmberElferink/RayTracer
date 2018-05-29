@@ -19,21 +19,37 @@ namespace Template
 
             //vloer
             Primitives.Add(
-    new CheckeredPlane(
-        new Vector3(0, 1, 0), 0,
-        new Material(
-            Material.materialType.reflective,
-            new Vector3(0.95f, 0.95f, 0.95f), 0.2f)));
+            new CheckeredPlane(
+                new Vector3(0, 1, 0), 0, //normal, D: -N.P
+                new Material(
+                    Material.materialType.reflective,
+                    new Vector3(0.95f, 0.95f, 0.95f), 0.2f)));
+            //plafond
+            Primitives.Add(
+             new Plane(
+                 new Vector3(0, 1, 0), -7,
+                 new Material(
+                     Material.materialType.diffuse,
+                     new Vector3(0f, 0f, 0f), 0)));
+            //muren
+            Primitives.Add(
+                new Plane(
+                    new Vector3(0, 0, -1), 10,
+                    new Material(
+                        Material.materialType.diffuse,
+                        new Vector3(1, 0.1f, 0.1f), 0)));
+            Primitives.Add(
+                new Plane(
+                    new Vector3(-1, 0, 0), 10,
+                    new Material(Material.materialType.diffuse,
+                    new Vector3(0.7f, 0.1f, 0.7f), 0)));
 
+            Primitives.Add(
+            new Plane(
+                new Vector3(1, 0, 0), -10,
+                new Material(Material.materialType.diffuse,
+                new Vector3(0.1f, 0.1f, 0.9f), 0)));
 
-
-            /*  //plafond
-               Primitives.Add(
-       new CheckeredPlane(
-           new Vector3(0, 1, 0), 5, // normal to the plane; d = -p(dot)N (p a point in the plane)
-           new Material( // material of the plane
-               Material.materialType.diffuse, // type of the material
-               new Vector3(1,1,1f), 0.8f))); // color and reflectiveness of the material (color is irrelevant for CheckeredPlane)*/
 
             Primitives.Add(
               new Triangle(
@@ -49,26 +65,23 @@ namespace Template
 
             Primitives.Add(
               new Sphere(
-                  new Vector3(0, 0.5f, 5.5f), 0.5f,
+                  new Vector3(0, 0.5f, 5.5f), 0.5f, //pos, radius
                   new Material(
                       Material.materialType.reflective,
-                      new Vector3(0.05f, 1, 0.05f), 1f)));
+                      new Vector3(0.05f, 1, 0.05f), 1f))); //color reflectiveness
             Primitives.Add(
-  new Sphere(
-      new Vector3(0.5f, 0.5f, 6.5f), 0.5f,
-      new Material(
-          Material.materialType.reflective,
-          new Vector3(1f, 0.05f, 0.05f), 1f)));
+              new Sphere(
+                  new Vector3(0.5f, 0.5f, 6.5f), 0.5f,
+                  new Material(
+                      Material.materialType.reflective,
+                      new Vector3(1f, 0.05f, 0.05f), 1f)));
 
             Primitives.Add(
-new Sphere(
-new Vector3(-0.5f, 0.5f, 6.5f), 0.5f,
-new Material(
-Material.materialType.reflective,
-new Vector3(0.05f, 0.05f, 1f), 1f)));
-
-
-
+            new Sphere(
+                new Vector3(-0.5f, 0.5f, 6.5f), 0.5f,
+                new Material(
+                    Material.materialType.reflective,
+                    new Vector3(0.05f, 0.05f, 1f), 1f)));
             Primitives.Add(
                 new Sphere(
                     new Vector3(0, 1f, 6f), 0.5f,
@@ -76,105 +89,11 @@ new Vector3(0.05f, 0.05f, 1f), 1f)));
                         Material.materialType.dielectric, new Vector3(), 0f, 1.5f)));
 
 
-
-
-
-            /*Primitives.Add(new CheckeredPlane(
-    new Vector3(0, 1, 0), 2, // normal to the plane; d = -p(dot)N (p a point in the plane)
-    new Material( // material of the plane
-        Material.materialType.reflective, // type of the material
-        new Vector3(), 0.8f))); // color and reflectiveness of the material (color is irrelevant for CheckeredPlane)*/
-           Primitives.Add(
-                new Plane(
-                    new Vector3(0, 1, 0), -7,
-                    new Material(
-                        Material.materialType.reflective,
-                        new Vector3(0.95f, 0.95f, 0.95f), 0)));
-            Primitives.Add(
-                new Plane(
-                    new Vector3(0, 0, -1), 10,
-                    new Material(
-                        Material.materialType.diffuse,
-                        new Vector3(1, 0.1f, 0.1f), 0)));
-            Primitives.Add(
-                new Plane(
-                    new Vector3(-1, 0, 0), 10,
-                    new Material(Material.materialType.diffuse,
-                    new Vector3(0.7f, 0.1f, 0.7f), 0)));
-
-            Primitives.Add(
-    new Plane(
-        new Vector3(1, 0, 0), -10,
-        new Material(Material.materialType.diffuse,
-        new Vector3(0.1f, 0.1f, 0.9f), 0)));
-
             lights.Add(new Light(new Vector3(-1, 5, 3), new Vector3(10, 10, 10))); // position and color of the light
             lights.Add(new Light(new Vector3(1, 5, 8), new Vector3(20, 20, 20))); // position and color of the light
             lights.Add(new Light(new Vector3(0, 5, 0), new Vector3(37, 35, 30))); // position and color of the light
             lights.Add(new Spotlight(new Vector3(0, 3, 6), new Vector3(0, 1, 6), 30, new Vector3(1000, 1000, 1000)));
 
-
-
-            /*Primitives.Add(
-                new Sphere(
-                    new Vector3(1.5f, 0, 4), 0.8f, // center and radius of the sphere 
-                    new Material( // material of the sphere
-                        Material.materialType.reflective, // type of the material
-                        new Vector3(1, 1, 1), 1))); // color, reflectiveness and index of refraction of the material (here: no index of refraction)
-            Primitives.Add(
-                new Sphere(
-                    new Vector3(1.5f, -0.5f, 2), 0.4f, 
-                    new Material( 
-                        Material.materialType.dielectric,
-                        new Vector3(), 0.6f, 1.5f)));
-            Primitives.Add(
-                new Sphere(
-                    new Vector3(0.2f, -0.7f, 2.5f), 0.5f,
-                    new Material(
-                        Material.materialType.reflective,
-                        new Vector3(0.1f, 1, 0.1f), 0.7f)));
-            Primitives.Add(
-                new Sphere(new Vector3(-0.3f, 0.15f, 4), 0.8f,
-                new Material(
-                    Material.materialType.reflective,
-                    new Vector3(0.1f, 0.1f, 1), 0.7f)));
-            Primitives.Add(
-                new Triangle(
-                    new Vector3(-1.5f, -1, 5.4f), // bottom left of triangle
-                    new Vector3(3.2f, -1, 5.4f), // bottom right of triangle
-                    new Vector3(0.7f, 3.3f, 4), // top of triangle
-                    new Material(Material.materialType.reflective,
-                    new Vector3(1, 1, 1), 1)));
-            Primitives.Add(
-                new CheckeredPlane(
-                    new Vector3(0, 1, 0), 2, // normal to the plane; d = -p(dot)N (p a point in the plane)
-                    new Material( // material of the plane
-                        Material.materialType.reflective, // type of the material
-                        new Vector3(), 0.8f))); // color and reflectiveness of the material (color is irrelevant for CheckeredPlane)
-            Primitives.Add(
-                new CheckeredPlane(
-                    new Vector3(0, 1, 0), -5,
-                    new Material(
-                        Material.materialType.diffuse,
-                        new Vector3(0.95f, 0.95f, 0.95f), 0)));
-            Primitives.Add(
-                new Plane(
-                    new Vector3(0, 0, -1), 12,
-                    new Material(
-                        Material.materialType.diffuse,
-                        new Vector3(1, 0.1f, 0.1f), 0)));
-            Primitives.Add(
-                new Plane(
-                    new Vector3(-1, 0, 0), 6,
-                    new Material(Material.materialType.diffuse,
-                    new Vector3(0.7f, 0.1f, 0.7f), 0)));
-            lights.Add(new Light(new Vector3(1, 6, 3), new Vector3(10, 10, 10))); // position and color of the light
-            lights.Add(new Light(new Vector3(-3, 3, 3.2f), new Vector3(10, 10, 10)));
-            lights.Add(new Light(new Vector3(0, 1, 0), new Vector3(15, 15, 15))); 
-            lights.Add(new Spotlight(
-                new Vector3(-1, 2, -1), // position of spotlight
-                new Vector3(0.2f, -0.7f, 2.5f), 30, // direction and angle of spotlight
-                new Vector3(80f, 80f, 80f))); // color of spotlight*/
         }
 
 
@@ -210,7 +129,7 @@ new Vector3(0.05f, 0.05f, 1f), 1f)));
             }
 
             // if the ray intersects a dielectric, we start tracing the reflected ray and (possibly) the refracted ray
-            if(intersection.Type == (int)Material.materialType.dielectric && recursionDepth < maxRecursionDepth)
+            if (intersection.Type == (int)Material.materialType.dielectric && recursionDepth < maxRecursionDepth)
             {
                 recursionDepth++;
                 return Fresnel(ray, intersection);
@@ -258,7 +177,7 @@ new Vector3(0.05f, 0.05f, 1f), 1f)));
             Intersection newIntersection = Intersect(newray);
 
             if (newIntersection != null && (newIntersection.prim is Sphere || newIntersection.prim is Triangle))
-                    debug.DrawRay(intersection.point, newIntersection.point, 2);
+                debug.DrawRay(intersection.point, newIntersection.point, 2);
 
             if (intersection.prim is CheckeredPlane)
             {
@@ -310,7 +229,7 @@ new Vector3(0.05f, 0.05f, 1f), 1f)));
 
 
         // method that casts a shadow ray to check if an intersection point is occluded from a light source
-        public bool Occlusion(Vector3 L, float dist, Intersection intersection, Light light) 
+        public bool Occlusion(Vector3 L, float dist, Intersection intersection, Light light)
         {
             float tmax = dist - 2 * eps; // distance from intersection point to light, with correction for offset
             Ray shadowray = new Ray(intersection.point + eps * L, L, tmax);
@@ -331,7 +250,7 @@ new Vector3(0.05f, 0.05f, 1f), 1f)));
 
 
         // method that calculates the light transport from all the light sources illuminating a point
-        public Vector3 LightTransport(Vector3 L, float dist, Intersection intersection, Vector3 lightColor, Vector3 totalLight) 
+        public Vector3 LightTransport(Vector3 L, float dist, Intersection intersection, Vector3 lightColor, Vector3 totalLight)
         {
             // source of formulas: slides lecture 5+6
             float dotpr = Vector3.Dot(intersection.norm, L);
