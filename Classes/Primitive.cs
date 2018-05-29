@@ -101,6 +101,7 @@ public class Triangle : Primitive
     {
         this.material = material;
 
+        //calculate values that are used often in the intersect calculation
         this.V1 = V1;
         u = V2 - V1;
         v = V3 - V1;
@@ -123,6 +124,8 @@ public class Triangle : Primitive
         if ((t < ray.t) && (t > 0))
         {
             Intersection intersection = new Intersection(t, ray.O + t * ray.D, this.N, this);
+
+            //checks if the intersection with the plane is inside the triangle
             if (IntersectIsInTriangle(intersection))
             {
                 ray.t = t;
