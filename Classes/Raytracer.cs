@@ -35,7 +35,6 @@ namespace Template
             {
                 for (int x = 0; x < RscreenWidth; x++)
                 {
-                    int raynumber = 0;
 
                      Ray ray1 = new Ray(camera.E, D(x - 0.5f, y + 0.5f), 1E30f);
                      Ray ray2 = new Ray(camera.E, D(x - 0.5f, y - 0.5f), 1E30f);
@@ -50,11 +49,11 @@ namespace Template
                     Intersection intersection4 = scene.Intersect(ray4);
                     Intersection intersection5 = scene.Intersect(ray5);
 
-                    Vector3 color1 = scene.Trace(ray1, intersection1, debug, raynumber);
-                    Vector3 color2 = scene.Trace(ray2, intersection2, debug, raynumber);
-                    Vector3 color3 = scene.Trace(ray3, intersection3, debug, raynumber);
-                    Vector3 color4 = scene.Trace(ray4, intersection4, debug, raynumber);
-                    Vector3 color5 = scene.Trace(ray5, intersection4, debug, raynumber);
+                    Vector3 color1 = scene.Trace(ray1, intersection1);
+                    Vector3 color2 = scene.Trace(ray2, intersection2);
+                    Vector3 color3 = scene.Trace(ray3, intersection3);
+                    Vector3 color4 = scene.Trace(ray4, intersection4);
+                    Vector3 color5 = scene.Trace(ray5, intersection5);
 
                     Vector3 AverageColor; 
                     AverageColor.X = (color1.X + color2.X + color3.X + color4.X + color5.X) / 5;
@@ -65,18 +64,18 @@ namespace Template
 
 
                     //if there is an intersection, draw the debug output
-                    if (intersection != null)
+                    if (intersection5 != null)
                     {
                         if (y == screen.height / 2) //only draw the rays of one row
                         {
                             //only draw the rays with intersections for spheres and triangles, otherwise, draw it als long as the ray is in the beginning.
-                            if (intersection.prim is Sphere || intersection.prim is Triangle)
+                            if (intersection5.prim is Sphere || intersection5.prim is Triangle)
                             {
-                                debug.DrawRay(camera.E, intersection.point, 0);
+                                debug.DrawRay(camera.E, intersection5.point, 0);
                             }
                             else
                             {
-                                debug.DrawRay(camera.E, ray.D * ray.t, 0);
+                                debug.DrawRay(camera.E, ray5.D * ray5.t, 0);
                             }
                         }
                     }
@@ -94,6 +93,14 @@ namespace Template
             int g = (int)(Math.Min(1, color.Y) * 255);
             int b = (int)(Math.Min(1, color.Z) * 255);
             return (r << 16) + (g << 8) + b;
+        }
+
+
+        Vector3 D(float x, float y)
+        {
+            Vector3 D = x / RscreenWidth * (camera.p1 - camera.p0) + y / screen.height * (camera.p2 - camera.p0) + camera.p0 - camera.E;
+            D.Normalize();
+            return D;
         }
     } 
 } 
