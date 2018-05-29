@@ -24,20 +24,35 @@ namespace Template
             Material.materialType.diffuse,
             new Vector3(0.95f, 0.95f, 0.95f), 0)));
 
+
+            Primitives.Add(
+    new Plane(
+        new Vector3(0, 1, 0), 5, // normal to the plane; d = -p(dot)N (p a point in the plane)
+        new Material( // material of the plane
+            Material.materialType.diffuse, // type of the material
+            new Vector3(1,1,1f), 0.8f))); // color and reflectiveness of the material (color is irrelevant for CheckeredPlane)
+
             Primitives.Add(
               new Triangle(
                   new Vector3(-2f, 0.5f, 9f), // bottom left of triangle
                   new Vector3(2f, 0.5f, 9f), // bottom right of triangle
-                  new Vector3(0f, 3.5f, 7f), // top of triangle
+                  new Vector3(0f, 3.5f, 7.5f), // top of triangle
                   new Material(Material.materialType.reflective,
                   new Vector3(1, 1, 1), 1)));
 
 
 
+            /*Primitives.Add(
+              new Sphere(
+                  new Vector3(0, 0.5f, 5.5f), 0.5f,
+                  new Material(
+                      Material.materialType.dielectric,
+                      new Vector3(), 0.6f, 1.5f)));*/
+
 
             Primitives.Add(
               new Sphere(
-                  new Vector3(0, 0.5f, 7), 0.5f,
+                  new Vector3(0, 0.5f, 5.5f), 0.5f,
                   new Material(
                       Material.materialType.reflective,
                       new Vector3(0.05f, 1, 0.05f), 1f)));
@@ -58,13 +73,49 @@ new Vector3(0.05f, 0.05f, 1f), 1f)));
 
 
             Primitives.Add(
+                new Sphere(
+                    new Vector3(0, 1f, 6f), 0.5f,
+                    new Material(
+                        Material.materialType.dielectric, new Vector3(), 0f, 1.5f)));
+            /*
+            Primitives.Add(
+  new Sphere(
+      new Vector3(0, 1f, 6f), 0.5f,
+      new Material(
+          Material.materialType.reflective,
+          new Vector3(0.05f, 1, 0.05f), 1f)));*/
+
+
+            Primitives.Add(
     new Plane(
         new Vector3(0, 0, 1), 10,
         new Material(
             Material.materialType.diffuse,
             new Vector3(1f, 1f, 1f), 0)));
 
-
+            /*Primitives.Add(new CheckeredPlane(
+    new Vector3(0, 1, 0), 2, // normal to the plane; d = -p(dot)N (p a point in the plane)
+    new Material( // material of the plane
+        Material.materialType.reflective, // type of the material
+        new Vector3(), 0.8f))); // color and reflectiveness of the material (color is irrelevant for CheckeredPlane)*/
+            Primitives.Add(
+                new CheckeredPlane(
+                    new Vector3(0, 1, 0), -5,
+                    new Material(
+                        Material.materialType.diffuse,
+                        new Vector3(0.95f, 0.95f, 0.95f), 0)));
+            Primitives.Add(
+                new Plane(
+                    new Vector3(0, 0, -1), 12,
+                    new Material(
+                        Material.materialType.diffuse,
+                        new Vector3(1, 0.1f, 0.1f), 0)));
+            Primitives.Add(
+                new Plane(
+                    new Vector3(-1, 0, 0), 6,
+                    new Material(Material.materialType.diffuse,
+                    new Vector3(0.7f, 0.1f, 0.7f), 0)));
+            lights.Add(new Light(new Vector3(1, 6, 3), new Vector3(10, 10, 10))); // position and color of the light
 
             lights.Add(new Light(new Vector3(0, 5, 0), new Vector3(50, 50, 50))); // position and color of the light
             /*Primitives.Add(
