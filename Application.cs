@@ -33,6 +33,8 @@ namespace Template {
             prevMs = curMs;
         }
 
+
+        //provides movement with WASD and arrows
         public void CameraActionKey(Key key)
         {
             if (key == Key.Down || key == Key.S)
@@ -61,6 +63,9 @@ namespace Template {
             }
             raytracer.camera.InitNewCameraDirection();
         }
+
+
+        //provides cameraMovement
         public void CameraActionMouse(int mouseX, int mouseY)
         {
             if (mouseX < screen.width/4 - mouseDeadZone)

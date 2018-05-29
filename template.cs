@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Drawing;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 
@@ -34,7 +32,8 @@ namespace Template
 			GL.Enable( EnableCap.Texture2D );
 			GL.Disable( EnableCap.DepthTest );
 			GL.Hint( HintTarget.PerspectiveCorrectionHint, HintMode.Nicest );
-			ClientSize = new Size( 1024, 512 );
+			ClientSize = new Size( 1920, 1080 ); //1024 x 512 old resolution
+            WindowState = WindowState.Maximized;
 			application = new Application();
 			application.screen = new Surface( Width, Height );
 			Sprite.target = application.screen;
