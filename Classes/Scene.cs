@@ -21,8 +21,8 @@ namespace Template
     new CheckeredPlane(
         new Vector3(0, 1, 0), 0,
         new Material(
-            Material.materialType.diffuse,
-            new Vector3(0.95f, 0.95f, 0.95f), 0)));
+            Material.materialType.reflective,
+            new Vector3(0.95f, 0.95f, 0.95f), 0.2f)));
 
 
             Primitives.Add(
@@ -112,13 +112,18 @@ new Vector3(0.05f, 0.05f, 1f), 1f)));
                         new Vector3(1, 0.1f, 0.1f), 0)));
             Primitives.Add(
                 new Plane(
-                    new Vector3(-1, 0, 0), 6,
+                    new Vector3(-1, 0, 0), 10,
                     new Material(Material.materialType.diffuse,
                     new Vector3(0.7f, 0.1f, 0.7f), 0)));
 
+            Primitives.Add(
+    new Plane(
+        new Vector3(1, 0, 0), -10,
+        new Material(Material.materialType.diffuse,
+        new Vector3(0.1f, 0.1f, 0.9f), 0)));
 
-            lights.Add(new Light(new Vector3(1, 6, 3), new Vector3(10, 10, 10))); // position and color of the light
-            lights.Add(new Light(new Vector3(1, 6, 7), new Vector3(10, 10, 10))); // position and color of the light
+            lights.Add(new Light(new Vector3(-1, 5, 3), new Vector3(10, 10, 10))); // position and color of the light
+            lights.Add(new Light(new Vector3(1, 5, 8), new Vector3(20, 20, 20))); // position and color of the light
             lights.Add(new Light(new Vector3(0, 5, 0), new Vector3(37, 35, 30))); // position and color of the light
             lights.Add(new Spotlight(new Vector3(0, 3, 6), new Vector3(0, 1, 6), 30, new Vector3(1000, 1000, 1000)));
 
