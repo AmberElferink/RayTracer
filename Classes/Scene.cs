@@ -90,10 +90,10 @@ namespace Template
 
 
             lights.Add(new Light(new Vector3(-1, 5, 3), new Vector3(10, 10, 10))); // position and color of the light
-            lights.Add(new Light(new Vector3(1, 5, 8), new Vector3(20, 20, 20))); // position and color of the light
+           // lights.Add(new Light(new Vector3(1, 5, 8), new Vector3(20, 20, 20))); // position and color of the light
             lights.Add(new Light(new Vector3(0, 5, 0), new Vector3(37, 35, 30))); // position and color of the light
             lights.Add(new Spotlight(new Vector3(0, 3, 6), new Vector3(0, 1, 6), 30, new Vector3(1000, 1000, 1000)));
-
+        
         }
 
 

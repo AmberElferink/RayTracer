@@ -97,7 +97,7 @@ namespace Template
             {
                 color = CreateColor(new Vector3(0, 0, 1));
                 raycounter1++;
-                if (raycounter1 >= 10000)
+                if (raycounter1 >= 50000)
                 {
                     raycounter1 = 0;
                     screen.Line(startX, startY, endX, endY, color);
